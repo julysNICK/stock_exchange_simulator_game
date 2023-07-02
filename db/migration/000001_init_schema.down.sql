@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS "buy";
+DROP TABLE IF EXISTS "portfolioActions";
+DROP TABLE IF EXISTS "portfolio";
+DROP TABLE IF EXISTS "actions";
+DROP TABLE IF EXISTS "players";
+
