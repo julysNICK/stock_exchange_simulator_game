@@ -18,7 +18,7 @@ WHERE id = $2
 RETURNING *;
 
 -- name: DeletePortfolio :one
-DELETE FROM portfolio WHERE id = $1;
+DELETE FROM portfolio WHERE id = $1 RETURNING *;
 
 -- name: ListPortfolio :many
 SELECT * FROM portfolio LIMIT $1 OFFSET $2;

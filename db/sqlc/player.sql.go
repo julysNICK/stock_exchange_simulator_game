@@ -36,14 +36,14 @@ INSERT INTO players (
   $4,
   $5
 ) 
-RETURNING id, username, hashed_password, full_name, cash, email, password_changed_at, created_at
+RETURNING id_player, username, hashed_password, full_name, cash, email, password_changed_at, created_at
 `
 
 type CreateProductParams struct {
 	Username       sql.NullString `json:"username"`
 	HashedPassword string         `json:"hashedPassword"`
 	FullName       string         `json:"fullName"`
-	Cash           interface{}    `json:"cash"`
+	Cash           string         `json:"cash"`
 	Email          string         `json:"email"`
 }
 
@@ -57,7 +57,7 @@ func (q *Queries) CreateProduct(ctx context.Context, arg CreateProductParams) (P
 	)
 	var i Player
 	err := row.Scan(
-		&i.ID,
+		&i.IDPlayer,
 		&i.Username,
 		&i.HashedPassword,
 		&i.FullName,
@@ -70,23 +70,23 @@ func (q *Queries) CreateProduct(ctx context.Context, arg CreateProductParams) (P
 }
 
 const deletePlayer = `-- name: DeletePlayer :exec
-DELETE FROM players WHERE id = $1
+DELETE FROM players WHERE id_player = $1
 `
 
-func (q *Queries) DeletePlayer(ctx context.Context, id int64) error {
-	_, err := q.db.ExecContext(ctx, deletePlayer, id)
+func (q *Queries) DeletePlayer(ctx context.Context, idPlayer int64) error {
+	_, err := q.db.ExecContext(ctx, deletePlayer, idPlayer)
 	return err
 }
 
 const getPlayerByEmail = `-- name: GetPlayerByEmail :one
-SELECT id, username, hashed_password, full_name, cash, email, password_changed_at, created_at FROM players WHERE email = $1
+SELECT id_player, username, hashed_password, full_name, cash, email, password_changed_at, created_at FROM players WHERE email = $1
 `
 
 func (q *Queries) GetPlayerByEmail(ctx context.Context, email string) (Player, error) {
 	row := q.db.QueryRowContext(ctx, getPlayerByEmail, email)
 	var i Player
 	err := row.Scan(
-		&i.ID,
+		&i.IDPlayer,
 		&i.Username,
 		&i.HashedPassword,
 		&i.FullName,
@@ -99,14 +99,14 @@ func (q *Queries) GetPlayerByEmail(ctx context.Context, email string) (Player, e
 }
 
 const getPlayerById = `-- name: GetPlayerById :one
-SELECT id, username, hashed_password, full_name, cash, email, password_changed_at, created_at FROM players WHERE id = $1
+SELECT id_player, username, hashed_password, full_name, cash, email, password_changed_at, created_at FROM players WHERE id_player = $1
 `
 
-func (q *Queries) GetPlayerById(ctx context.Context, id int64) (Player, error) {
-	row := q.db.QueryRowContext(ctx, getPlayerById, id)
+func (q *Queries) GetPlayerById(ctx context.Context, idPlayer int64) (Player, error) {
+	row := q.db.QueryRowContext(ctx, getPlayerById, idPlayer)
 	var i Player
 	err := row.Scan(
-		&i.ID,
+		&i.IDPlayer,
 		&i.Username,
 		&i.HashedPassword,
 		&i.FullName,
@@ -119,14 +119,14 @@ func (q *Queries) GetPlayerById(ctx context.Context, id int64) (Player, error) {
 }
 
 const getPlayerByUsername = `-- name: GetPlayerByUsername :one
-SELECT id, username, hashed_password, full_name, cash, email, password_changed_at, created_at FROM players WHERE username = $1
+SELECT id_player, username, hashed_password, full_name, cash, email, password_changed_at, created_at FROM players WHERE username = $1
 `
 
 func (q *Queries) GetPlayerByUsername(ctx context.Context, username sql.NullString) (Player, error) {
 	row := q.db.QueryRowContext(ctx, getPlayerByUsername, username)
 	var i Player
 	err := row.Scan(
-		&i.ID,
+		&i.IDPlayer,
 		&i.Username,
 		&i.HashedPassword,
 		&i.FullName,
@@ -139,7 +139,7 @@ func (q *Queries) GetPlayerByUsername(ctx context.Context, username sql.NullStri
 }
 
 const listPlayers = `-- name: ListPlayers :many
-SELECT id, username, hashed_password, full_name, cash, email, password_changed_at, created_at FROM players LIMIT $1 OFFSET $2
+SELECT id_player, username, hashed_password, full_name, cash, email, password_changed_at, created_at FROM players LIMIT $1 OFFSET $2
 `
 
 type ListPlayersParams struct {
@@ -157,7 +157,7 @@ func (q *Queries) ListPlayers(ctx context.Context, arg ListPlayersParams) ([]Pla
 	for rows.Next() {
 		var i Player
 		if err := rows.Scan(
-			&i.ID,
+			&i.IDPlayer,
 			&i.Username,
 			&i.HashedPassword,
 			&i.FullName,
@@ -180,7 +180,7 @@ func (q *Queries) ListPlayers(ctx context.Context, arg ListPlayersParams) ([]Pla
 }
 
 const rankPlayers = `-- name: RankPlayers :many
-SELECT id, username, hashed_password, full_name, cash, email, password_changed_at, created_at FROM players ORDER BY cash DESC LIMIT $1 OFFSET $2
+SELECT id_player, username, hashed_password, full_name, cash, email, password_changed_at, created_at FROM players ORDER BY cash DESC LIMIT $1 OFFSET $2
 `
 
 type RankPlayersParams struct {
@@ -198,7 +198,7 @@ func (q *Queries) RankPlayers(ctx context.Context, arg RankPlayersParams) ([]Pla
 	for rows.Next() {
 		var i Player
 		if err := rows.Scan(
-			&i.ID,
+			&i.IDPlayer,
 			&i.Username,
 			&i.HashedPassword,
 			&i.FullName,
@@ -229,19 +229,19 @@ UPDATE players SET
   email = COALESCE($5, email),
   password_changed_at = COALESCE($6, password_changed_at),
   created_at = COALESCE($7, created_at)
-WHERE id = $8
-RETURNING id, username, hashed_password, full_name, cash, email, password_changed_at, created_at
+WHERE id_player = $8
+RETURNING id_player, username, hashed_password, full_name, cash, email, password_changed_at, created_at
 `
 
 type UpdatePlayerParams struct {
 	Username          sql.NullString `json:"username"`
 	HashedPassword    string         `json:"hashedPassword"`
 	FullName          string         `json:"fullName"`
-	Cash              interface{}    `json:"cash"`
+	Cash              string         `json:"cash"`
 	Email             string         `json:"email"`
 	PasswordChangedAt time.Time      `json:"passwordChangedAt"`
 	CreatedAt         time.Time      `json:"createdAt"`
-	ID                int64          `json:"id"`
+	IDPlayer          int64          `json:"idPlayer"`
 }
 
 func (q *Queries) UpdatePlayer(ctx context.Context, arg UpdatePlayerParams) (Player, error) {
@@ -253,11 +253,11 @@ func (q *Queries) UpdatePlayer(ctx context.Context, arg UpdatePlayerParams) (Pla
 		arg.Email,
 		arg.PasswordChangedAt,
 		arg.CreatedAt,
-		arg.ID,
+		arg.IDPlayer,
 	)
 	var i Player
 	err := row.Scan(
-		&i.ID,
+		&i.IDPlayer,
 		&i.Username,
 		&i.HashedPassword,
 		&i.FullName,

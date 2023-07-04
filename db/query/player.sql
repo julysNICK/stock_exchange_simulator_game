@@ -21,7 +21,7 @@ SELECT * FROM players WHERE username = $1;
 SELECT * FROM players WHERE email = $1;
 
 -- name: GetPlayerById :one
-SELECT * FROM players WHERE id = $1;
+SELECT * FROM players WHERE id_player = $1;
 
 -- name: UpdatePlayer :one
 UPDATE players SET
@@ -32,11 +32,11 @@ UPDATE players SET
   email = COALESCE($5, email),
   password_changed_at = COALESCE($6, password_changed_at),
   created_at = COALESCE($7, created_at)
-WHERE id = $8
+WHERE id_player = $8
 RETURNING *;
 
 -- name: DeletePlayer :exec
-DELETE FROM players WHERE id = $1;
+DELETE FROM players WHERE id_player = $1;
 
 -- name: ListPlayers :many
 SELECT * FROM players LIMIT $1 OFFSET $2;

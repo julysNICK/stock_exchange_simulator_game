@@ -12,40 +12,40 @@ import (
 type Action struct {
 	ID                int64         `json:"id"`
 	Name              string        `json:"name"`
-	IdActions         sql.NullInt32 `json:"idActions"`
-	ISIN              string        `json:"ISIN"`
-	WKN               string        `json:"WKN"`
-	CurrentValue      interface{}   `json:"currentValue"`
-	BID               interface{}   `json:"BID"`
-	ASK               interface{}   `json:"ASK"`
-	Spread            interface{}   `json:"spread"`
-	TimeOfLastRefresh interface{}   `json:"timeOfLastRefresh"`
-	ChangePercentage  interface{}   `json:"changePercentage"`
-	ChangeAbsolute    interface{}   `json:"changeAbsolute"`
-	Peak24h           interface{}   `json:"peak24h"`
-	Low24h            interface{}   `json:"low24h"`
-	Peak7d            interface{}   `json:"peak7d"`
-	Low7d             interface{}   `json:"low7d"`
-	Peak30d           interface{}   `json:"peak30d"`
-	Low30d            interface{}   `json:"low30d"`
+	IDActions         sql.NullInt32 `json:"idActions"`
+	Isin              string        `json:"isin"`
+	Wkn               string        `json:"wkn"`
+	CurrentValue      string        `json:"currentValue"`
+	Bid               string        `json:"bid"`
+	Ask               string        `json:"ask"`
+	Spread            string        `json:"spread"`
+	TimeOfLastRefresh time.Time     `json:"timeOfLastRefresh"`
+	ChangePercentage  string        `json:"changePercentage"`
+	ChangeAbsolute    string        `json:"changeAbsolute"`
+	Peak24h           string        `json:"peak24h"`
+	Low24h            string        `json:"low24h"`
+	Peak7d            string        `json:"peak7d"`
+	Low7d             string        `json:"low7d"`
+	Peak30d           string        `json:"peak30d"`
+	Low30d            string        `json:"low30d"`
 	CreatedAt         time.Time     `json:"createdAt"`
 }
 
 type Buy struct {
-	ID           int64       `json:"id"`
-	ActionIdBuy  int64       `json:"actionIdBuy"`
-	ProfileId    int64       `json:"profileId"`
-	NumberStocks int32       `json:"numberStocks"`
-	Limit        interface{} `json:"limit"`
-	CreatedAt    time.Time   `json:"createdAt"`
+	ID           int64     `json:"id"`
+	ActionIDBuy  int64     `json:"actionIDBuy"`
+	ProfileID    int64     `json:"profileID"`
+	NumberStocks int32     `json:"numberStocks"`
+	Limit        string    `json:"limit"`
+	CreatedAt    time.Time `json:"createdAt"`
 }
 
 type Player struct {
-	ID                int64          `json:"id"`
+	IDPlayer          int64          `json:"idPlayer"`
 	Username          sql.NullString `json:"username"`
 	HashedPassword    string         `json:"hashedPassword"`
 	FullName          string         `json:"fullName"`
-	Cash              interface{}    `json:"cash"`
+	Cash              string         `json:"cash"`
 	Email             string         `json:"email"`
 	PasswordChangedAt time.Time      `json:"passwordChangedAt"`
 	CreatedAt         time.Time      `json:"createdAt"`
@@ -53,16 +53,16 @@ type Player struct {
 
 type Portfolio struct {
 	ID        int64     `json:"id"`
-	PlayerId  int64     `json:"playerId"`
+	PlayerID  int64     `json:"playerID"`
 	CreatedAt time.Time `json:"createdAt"`
 }
 
 type PortfolioAction struct {
-	ID            int32       `json:"id"`
-	PortfolioId   int64       `json:"portfolioId"`
-	ActionId      int64       `json:"actionId"`
-	PlayerId      int64       `json:"playerId"`
-	Quantity      int32       `json:"quantity"`
-	PurchasePrice interface{} `json:"purchasePrice"`
-	CreatedAt     time.Time   `json:"createdAt"`
+	ID            int32     `json:"id"`
+	PortfolioID   int64     `json:"portfolioID"`
+	ActionID      int64     `json:"actionID"`
+	PlayerID      int64     `json:"playerID"`
+	Quantity      int32     `json:"quantity"`
+	PurchasePrice string    `json:"purchasePrice"`
+	CreatedAt     time.Time `json:"createdAt"`
 }

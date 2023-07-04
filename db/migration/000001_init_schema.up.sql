@@ -1,5 +1,5 @@
 CREATE TABLE "players" (
-  "id_players" bigserial PRIMARY KEY,
+  "id_player" bigserial PRIMARY KEY,
   "username" varchar UNIQUE,
   "hashed_password" varchar NOT NULL,
   "full_name" varchar NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE "actions" (
   "bid" numeric(10, 2) NOT NULL,
   "ask" numeric(10, 2) NOT NULL,
   "spread" numeric(10, 2) NOT NULL,
-  "time_Of_last_refresh" timestamp NOT NULL DEFAULT (now()),
+  "time_of_last_refresh" timestamp NOT NULL DEFAULT (now()),
   "change_percentage" numeric(5, 2) NOT NULL,
   "change_absolute" numeric(10, 2) NOT NULL,
   "peak24h" numeric(10, 2) NOT NULL,
@@ -68,12 +68,12 @@ CREATE INDEX ON "portfolioActions" ("portfolio_id", "action_id");
 
 ALTER TABLE "buy" ADD FOREIGN KEY ("action_id_buy") REFERENCES "actions" ("id");
 
-ALTER TABLE "buy" ADD FOREIGN KEY ("profile_id") REFERENCES "players" ("id_players");
+ALTER TABLE "buy" ADD FOREIGN KEY ("profile_id") REFERENCES "players" ("id_player");
 
-ALTER TABLE "portfolio" ADD FOREIGN KEY ("player_id") REFERENCES "players" ("id_players");
+ALTER TABLE "portfolio" ADD FOREIGN KEY ("player_id") REFERENCES "players" ("id_player");
 
 ALTER TABLE "portfolioActions" ADD FOREIGN KEY ("portfolio_id") REFERENCES "portfolio" ("id");
 
 ALTER TABLE "portfolioActions" ADD FOREIGN KEY ("action_id") REFERENCES "actions" ("id");
 
-ALTER TABLE "portfolioActions" ADD FOREIGN KEY ("player_id") REFERENCES "players" ("id_players");
+ALTER TABLE "portfolioActions" ADD FOREIGN KEY ("player_id") REFERENCES "players" ("id_player");
