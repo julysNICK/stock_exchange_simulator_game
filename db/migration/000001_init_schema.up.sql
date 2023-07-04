@@ -12,16 +12,16 @@ CREATE TABLE "players" (
 CREATE TABLE "actions" (
   "id" bigserial PRIMARY KEY,
   "name" varchar(255) NOT NULL,
-  "idActions" int,
-  "ISIN" varchar(20) UNIQUE NOT NULL,
-  "WKN" varchar(20) UNIQUE NOT NULL,
-  "currentValue" numeric(10, 2) NOT NULL,
-  "BID" numeric(10, 2) NOT NULL,
-  "ASK" numeric(10, 2) NOT NULL,
+  "id_actions" int,
+  "isin" varchar(20) UNIQUE NOT NULL,
+  "wkn" varchar(20) UNIQUE NOT NULL,
+  "current_value" numeric(10, 2) NOT NULL,
+  "bid" numeric(10, 2) NOT NULL,
+  "ask" numeric(10, 2) NOT NULL,
   "spread" numeric(10, 2) NOT NULL,
-  "timeOfLastRefresh" timestamp NOT NULL DEFAULT (now()),
-  "changePercentage" numeric(5, 2) NOT NULL,
-  "changeAbsolute" numeric(10, 2) NOT NULL,
+  "time_Of_last_refresh" timestamp NOT NULL DEFAULT (now()),
+  "change_percentage" numeric(5, 2) NOT NULL,
+  "change_absolute" numeric(10, 2) NOT NULL,
   "peak24h" numeric(10, 2) NOT NULL,
   "low24h" numeric(10, 2) NOT NULL,
   "peak7d" numeric(10, 2) NOT NULL,
@@ -33,47 +33,47 @@ CREATE TABLE "actions" (
 
 CREATE TABLE "buy" (
   "id" bigserial PRIMARY KEY,
-  "actionIdBuy" bigint NOT NULL,
-  "profileId" bigint NOT NULL,
-  "numberStocks" int NOT NULL,
+  "action_id_buy" bigint NOT NULL,
+  "profile_id" bigint NOT NULL,
+  "number_stocks" int NOT NULL,
   "limit" numeric(10, 2) NOT NULL,
   "created_at" timestamp NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "portfolio" (
   "id" bigserial PRIMARY KEY,
-  "playerId" bigint NOT NULL,
+  "player_id" bigint NOT NULL,
   "created_at" timestamp NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "portfolioActions" (
   "id" int PRIMARY KEY,
-  "portfolioId" bigint NOT NULL,
-  "actionId" bigint NOT NULL,
-  "playerId" bigint NOT NULL,
+  "portfolio_id" bigint NOT NULL,
+  "action_id" bigint NOT NULL,
+  "player_id" bigint NOT NULL,
   "quantity" int NOT NULL,
-  "purchasePrice" numeric(10, 2) NOT NULL,
+  "purchase_price" numeric(10, 2) NOT NULL,
   "created_at" timestamp NOT NULL DEFAULT (now())
 );
 
-CREATE INDEX ON "buy" ("profileId");
+CREATE INDEX ON "buy" ("profile_id");
 
-CREATE INDEX ON "buy" ("actionIdBuy");
+CREATE INDEX ON "buy" ("action_id_buy");
 
-CREATE UNIQUE INDEX ON "buy" ("profileId", "numberStocks");
+CREATE UNIQUE INDEX ON "buy" ("profile_id", "number_stocks");
 
-CREATE INDEX ON "portfolio" ("playerId");
+CREATE INDEX ON "portfolio" ("player_id");
 
-CREATE INDEX ON "portfolioActions" ("portfolioId", "actionId");
+CREATE INDEX ON "portfolioActions" ("portfolio_id", "action_id");
 
-ALTER TABLE "buy" ADD FOREIGN KEY ("actionIdBuy") REFERENCES "actions" ("id");
+ALTER TABLE "buy" ADD FOREIGN KEY ("action_id_buy") REFERENCES "actions" ("id");
 
-ALTER TABLE "buy" ADD FOREIGN KEY ("profileId") REFERENCES "players" ("id_players");
+ALTER TABLE "buy" ADD FOREIGN KEY ("profile_id") REFERENCES "players" ("id_players");
 
-ALTER TABLE "portfolio" ADD FOREIGN KEY ("playerId") REFERENCES "players" ("id_players");
+ALTER TABLE "portfolio" ADD FOREIGN KEY ("player_id") REFERENCES "players" ("id_players");
 
-ALTER TABLE "portfolioActions" ADD FOREIGN KEY ("portfolioId") REFERENCES "portfolio" ("id");
+ALTER TABLE "portfolioActions" ADD FOREIGN KEY ("portfolio_id") REFERENCES "portfolio" ("id");
 
-ALTER TABLE "portfolioActions" ADD FOREIGN KEY ("actionId") REFERENCES "actions" ("id");
+ALTER TABLE "portfolioActions" ADD FOREIGN KEY ("action_id") REFERENCES "actions" ("id");
 
-ALTER TABLE "portfolioActions" ADD FOREIGN KEY ("playerId") REFERENCES "players" ("id_players");
+ALTER TABLE "portfolioActions" ADD FOREIGN KEY ("player_id") REFERENCES "players" ("id_players");

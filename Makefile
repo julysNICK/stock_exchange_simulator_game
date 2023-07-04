@@ -11,6 +11,12 @@ network:
 postgres:
 	sudo docker run --name postgres_stock_exchange --network stock_exchange_network -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -p 5432:5432 -d postgres
 
+migrateup:
+	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/stock_exchange?sslmode=disable" -verbose up
+
+migratedown:
+	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/stock_exchange?sslmode=disable" -verbose down
+
 createdb:
 	sudo docker exec -it postgres_stock_exchange createdb --username=root --owner=root stock_exchange
 
@@ -26,4 +32,4 @@ stopdocker:
 	sudo systemctl stop docker && sudo docker stop postgres_stock_exchange
 
 
-.PHONY: sqlc server network postgres createdb dropdb initdocker stopdocker
+.PHONY: sqlc server network postgres createdb dropdb initdocker stopdocker migrateup migratedown
