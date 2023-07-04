@@ -15,8 +15,8 @@ type Querier interface {
 	CountPlayers(ctx context.Context) (int64, error)
 	CountPortfolio(ctx context.Context) (int64, error)
 	CreateAction(ctx context.Context, arg CreateActionParams) (Action, error)
+	CreatePlayer(ctx context.Context, arg CreatePlayerParams) (Player, error)
 	CreatePortfolio(ctx context.Context, playerID int64) (Portfolio, error)
-	CreateProduct(ctx context.Context, arg CreateProductParams) (Player, error)
 	DeleteAction(ctx context.Context, id int64) error
 	DeleteBuy(ctx context.Context, id int64) (Buy, error)
 	DeletePlayer(ctx context.Context, idPlayer int64) error

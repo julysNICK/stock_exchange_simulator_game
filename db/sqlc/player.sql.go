@@ -8,7 +8,6 @@ package db
 import (
 	"context"
 	"database/sql"
-	"time"
 )
 
 const countPlayers = `-- name: CountPlayers :one
@@ -22,7 +21,7 @@ func (q *Queries) CountPlayers(ctx context.Context) (int64, error) {
 	return count, err
 }
 
-const createProduct = `-- name: CreateProduct :one
+const createPlayer = `-- name: CreatePlayer :one
 INSERT INTO players (
   username,
   hashed_password,
@@ -39,7 +38,7 @@ INSERT INTO players (
 RETURNING id_player, username, hashed_password, full_name, cash, email, password_changed_at, created_at
 `
 
-type CreateProductParams struct {
+type CreatePlayerParams struct {
 	Username       sql.NullString `json:"username"`
 	HashedPassword string         `json:"hashedPassword"`
 	FullName       string         `json:"fullName"`
@@ -47,8 +46,8 @@ type CreateProductParams struct {
 	Email          string         `json:"email"`
 }
 
-func (q *Queries) CreateProduct(ctx context.Context, arg CreateProductParams) (Player, error) {
-	row := q.db.QueryRowContext(ctx, createProduct,
+func (q *Queries) CreatePlayer(ctx context.Context, arg CreatePlayerParams) (Player, error) {
+	row := q.db.QueryRowContext(ctx, createPlayer,
 		arg.Username,
 		arg.HashedPassword,
 		arg.FullName,
@@ -222,30 +221,31 @@ func (q *Queries) RankPlayers(ctx context.Context, arg RankPlayersParams) ([]Pla
 
 const updatePlayer = `-- name: UpdatePlayer :one
 UPDATE players SET
-  username = COALESCE($1, username),
-  hashed_password = COALESCE($2, hashed_password),
-  full_name = COALESCE($3, full_name),
-  cash = COALESCE($4, cash),
-  email = COALESCE($5, email),
-  password_changed_at = COALESCE($6, password_changed_at),
-  created_at = COALESCE($7, created_at)
-WHERE id_player = $8
+  username = COALESCE($2, username),
+  hashed_password = COALESCE($3, hashed_password),
+  full_name = COALESCE($4, full_name),
+  cash = COALESCE($5, cash),
+  email = COALESCE($6, email),
+  password_changed_at = COALESCE($7, password_changed_at),
+  created_at = COALESCE($8, created_at)
+WHERE id_player = $1
 RETURNING id_player, username, hashed_password, full_name, cash, email, password_changed_at, created_at
 `
 
 type UpdatePlayerParams struct {
-	Username          sql.NullString `json:"username"`
-	HashedPassword    string         `json:"hashedPassword"`
-	FullName          string         `json:"fullName"`
-	Cash              string         `json:"cash"`
-	Email             string         `json:"email"`
-	PasswordChangedAt time.Time      `json:"passwordChangedAt"`
-	CreatedAt         time.Time      `json:"createdAt"`
 	IDPlayer          int64          `json:"idPlayer"`
+	Username          sql.NullString `json:"username"`
+	HashedPassword    sql.NullString `json:"hashedPassword"`
+	FullName          sql.NullString `json:"fullName"`
+	Cash              sql.NullString `json:"cash"`
+	Email             sql.NullString `json:"email"`
+	PasswordChangedAt sql.NullTime   `json:"passwordChangedAt"`
+	CreatedAt         sql.NullTime   `json:"createdAt"`
 }
 
 func (q *Queries) UpdatePlayer(ctx context.Context, arg UpdatePlayerParams) (Player, error) {
 	row := q.db.QueryRowContext(ctx, updatePlayer,
+		arg.IDPlayer,
 		arg.Username,
 		arg.HashedPassword,
 		arg.FullName,
@@ -253,7 +253,6 @@ func (q *Queries) UpdatePlayer(ctx context.Context, arg UpdatePlayerParams) (Pla
 		arg.Email,
 		arg.PasswordChangedAt,
 		arg.CreatedAt,
-		arg.IDPlayer,
 	)
 	var i Player
 	err := row.Scan(

@@ -1,4 +1,4 @@
--- name: CreateProduct :one
+-- name: CreatePlayer :one
 INSERT INTO players (
   username,
   hashed_password,
@@ -25,14 +25,14 @@ SELECT * FROM players WHERE id_player = $1;
 
 -- name: UpdatePlayer :one
 UPDATE players SET
-  username = COALESCE($1, username),
-  hashed_password = COALESCE($2, hashed_password),
-  full_name = COALESCE($3, full_name),
-  cash = COALESCE($4, cash),
-  email = COALESCE($5, email),
-  password_changed_at = COALESCE($6, password_changed_at),
-  created_at = COALESCE($7, created_at)
-WHERE id_player = $8
+  username = COALESCE(sqlc.narg(username), username),
+  hashed_password = COALESCE(sqlc.narg(hashed_password), hashed_password),
+  full_name = COALESCE(sqlc.narg(full_name), full_name),
+  cash = COALESCE(sqlc.narg(cash), cash),
+  email = COALESCE(sqlc.narg(email), email),
+  password_changed_at = COALESCE(sqlc.narg(password_changed_at), password_changed_at),
+  created_at = COALESCE(sqlc.narg(created_at), created_at)
+WHERE id_player = $1
 RETURNING *;
 
 -- name: DeletePlayer :exec
