@@ -1,3 +1,5 @@
+DB_URL_DEV=postgresql://root:secret@localhost:5432/stock_exchange?sslmode=disable
+
 sqlc:
 	sqlc generate
 

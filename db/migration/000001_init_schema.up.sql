@@ -5,8 +5,8 @@ CREATE TABLE "players" (
   "full_name" varchar NOT NULL,
   "cash" "decimal(10, 2)" NOT NULL,
   "email" varchar UNIQUE NOT NULL,
-  "password_changed_at" timestampz NOT NULL DEFAULT (0001-01-01 00:00:00Z),
-  "created_at" timestampz NOT NULL DEFAULT (now()),
+  "password_changed_at" timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
+  "created_at" timestamp NOT NULL DEFAULT (now()),
   PRIMARY KEY ("id", "email")
 );
 
@@ -29,7 +29,7 @@ CREATE TABLE "actions" (
   "low7d" "decimal(10, 2)" NOT NULL,
   "peak30d" "decimal(10, 2)" NOT NULL,
   "low30d" "decimal(10, 2)" NOT NULL,
-  "created_at" timestampz NOT NULL DEFAULT (now())
+  "created_at" timestamp NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "buy" (
@@ -38,13 +38,13 @@ CREATE TABLE "buy" (
   "profileId" bigint NOT NULL,
   "numberStocks" int NOT NULL,
   "limit" "decimal(10, 2)" NOT NULL,
-  "created_at" timestampz NOT NULL DEFAULT (now())
+  "created_at" timestamp NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "portfolio" (
   "id" bigserial PRIMARY KEY,
   "playerId" bigint NOT NULL,
-  "created_at" timestampz NOT NULL DEFAULT (now())
+  "created_at" timestamp NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "portfolioActions" (
@@ -54,7 +54,7 @@ CREATE TABLE "portfolioActions" (
   "playerId" bigint NOT NULL,
   "quantity" int NOT NULL,
   "purchasePrice" "decimal(10, 2)" NOT NULL,
-  "created_at" timestampz NOT NULL DEFAULT (now())
+  "created_at" timestamp NOT NULL DEFAULT (now())
 );
 
 CREATE INDEX ON "buy" ("profileId");
