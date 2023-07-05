@@ -46,25 +46,25 @@ SELECT * FROM actions WHERE id = $1;
 
 -- name: UpdateAction :one
 UPDATE actions SET
-  "name" = COALESCE($1, "name"),
-  "id_actions" = COALESCE($2, "id_actions"),
-  "isin" = COALESCE($3, "isin"),
-  "wkn" = COALESCE($4, "wkn"),
-  "current_value" = COALESCE($5, "current_value"),
-  "bid" = COALESCE($6, "bid"),
-  "ask" = COALESCE($7, "ask"),
-  "spread" = COALESCE($8, "spread"),
-  "time_of_last_refresh" = COALESCE($9, "time_of_last_refresh"),
-  "change_percentage" = COALESCE($10, "change_percentage"),
-  "change_absolute" = COALESCE($11, "change_absolute"),
-  peak24h = COALESCE($12, peak24h),
-  low24h = COALESCE($13, low24h),
-  peak7d = COALESCE($14, peak7d),
-  low7d = COALESCE($15, low7d),
-  peak30d = COALESCE($16, peak30d),
-  low30d = COALESCE($17, low30d),
-  created_at = COALESCE($18, created_at)
-WHERE id = $19
+  "name" = COALESCE(sqlc.narg(name), name),
+  "id_actions" = COALESCE(sqlc.narg(id_actions), id_actions),
+  "isin" = COALESCE(sqlc.narg(isin), isin),
+  "wkn" = COALESCE(sqlc.narg(wkn), wkn),
+  "current_value" = COALESCE(sqlc.narg(current_value), current_value),
+  "bid" = COALESCE(sqlc.narg(bid), bid),
+  "ask" = COALESCE(sqlc.narg(ask), ask),
+  "spread" = COALESCE(sqlc.narg(spread), spread),
+  "time_of_last_refresh" = COALESCE(sqlc.narg(time_of_last_refresh), time_of_last_refresh),
+  "change_percentage" = COALESCE(sqlc.narg(change_percentage), change_percentage),
+  "change_absolute" = COALESCE(sqlc.narg(change_absolute), change_absolute),
+  peak24h = COALESCE(sqlc.narg(peak24h), peak24h),
+  low24h = COALESCE(sqlc.narg(low24h), low24h),
+  peak7d = COALESCE(sqlc.narg(peak7d), peak7d),
+  low7d = COALESCE(sqlc.narg(low7d), low7d),
+  peak30d = COALESCE(sqlc.narg(peak30d), peak30d),
+  low30d = COALESCE(sqlc.narg(low30d), low30d),
+  created_at = COALESCE(sqlc.narg(created_at), created_at)
+WHERE id = $1
 
 RETURNING *;
 

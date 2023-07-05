@@ -253,53 +253,54 @@ func (q *Queries) ListActions(ctx context.Context, arg ListActionsParams) ([]Act
 
 const updateAction = `-- name: UpdateAction :one
 UPDATE actions SET
-  "name" = COALESCE($1, "name"),
-  "id_actions" = COALESCE($2, "id_actions"),
-  "isin" = COALESCE($3, "isin"),
-  "wkn" = COALESCE($4, "wkn"),
-  "current_value" = COALESCE($5, "current_value"),
-  "bid" = COALESCE($6, "bid"),
-  "ask" = COALESCE($7, "ask"),
-  "spread" = COALESCE($8, "spread"),
-  "time_of_last_refresh" = COALESCE($9, "time_of_last_refresh"),
-  "change_percentage" = COALESCE($10, "change_percentage"),
-  "change_absolute" = COALESCE($11, "change_absolute"),
-  peak24h = COALESCE($12, peak24h),
-  low24h = COALESCE($13, low24h),
-  peak7d = COALESCE($14, peak7d),
-  low7d = COALESCE($15, low7d),
-  peak30d = COALESCE($16, peak30d),
-  low30d = COALESCE($17, low30d),
-  created_at = COALESCE($18, created_at)
-WHERE id = $19
+  "name" = COALESCE($2, name),
+  "id_actions" = COALESCE($3, id_actions),
+  "isin" = COALESCE($4, isin),
+  "wkn" = COALESCE($5, wkn),
+  "current_value" = COALESCE($6, current_value),
+  "bid" = COALESCE($7, bid),
+  "ask" = COALESCE($8, ask),
+  "spread" = COALESCE($9, spread),
+  "time_of_last_refresh" = COALESCE($10, time_of_last_refresh),
+  "change_percentage" = COALESCE($11, change_percentage),
+  "change_absolute" = COALESCE($12, change_absolute),
+  peak24h = COALESCE($13, peak24h),
+  low24h = COALESCE($14, low24h),
+  peak7d = COALESCE($15, peak7d),
+  low7d = COALESCE($16, low7d),
+  peak30d = COALESCE($17, peak30d),
+  low30d = COALESCE($18, low30d),
+  created_at = COALESCE($19, created_at)
+WHERE id = $1
 
 RETURNING id, name, id_actions, isin, wkn, current_value, bid, ask, spread, time_of_last_refresh, change_percentage, change_absolute, peak24h, low24h, peak7d, low7d, peak30d, low30d, created_at
 `
 
 type UpdateActionParams struct {
-	Name              string        `json:"name"`
-	IDActions         sql.NullInt32 `json:"idActions"`
-	Isin              string        `json:"isin"`
-	Wkn               string        `json:"wkn"`
-	CurrentValue      string        `json:"currentValue"`
-	Bid               string        `json:"bid"`
-	Ask               string        `json:"ask"`
-	Spread            string        `json:"spread"`
-	TimeOfLastRefresh time.Time     `json:"timeOfLastRefresh"`
-	ChangePercentage  string        `json:"changePercentage"`
-	ChangeAbsolute    string        `json:"changeAbsolute"`
-	Peak24h           string        `json:"peak24h"`
-	Low24h            string        `json:"low24h"`
-	Peak7d            string        `json:"peak7d"`
-	Low7d             string        `json:"low7d"`
-	Peak30d           string        `json:"peak30d"`
-	Low30d            string        `json:"low30d"`
-	CreatedAt         time.Time     `json:"createdAt"`
-	ID                int64         `json:"id"`
+	ID                int64          `json:"id"`
+	Name              sql.NullString `json:"name"`
+	IDActions         sql.NullInt32  `json:"idActions"`
+	Isin              sql.NullString `json:"isin"`
+	Wkn               sql.NullString `json:"wkn"`
+	CurrentValue      sql.NullString `json:"currentValue"`
+	Bid               sql.NullString `json:"bid"`
+	Ask               sql.NullString `json:"ask"`
+	Spread            sql.NullString `json:"spread"`
+	TimeOfLastRefresh sql.NullTime   `json:"timeOfLastRefresh"`
+	ChangePercentage  sql.NullString `json:"changePercentage"`
+	ChangeAbsolute    sql.NullString `json:"changeAbsolute"`
+	Peak24h           sql.NullString `json:"peak24h"`
+	Low24h            sql.NullString `json:"low24h"`
+	Peak7d            sql.NullString `json:"peak7d"`
+	Low7d             sql.NullString `json:"low7d"`
+	Peak30d           sql.NullString `json:"peak30d"`
+	Low30d            sql.NullString `json:"low30d"`
+	CreatedAt         sql.NullTime   `json:"createdAt"`
 }
 
 func (q *Queries) UpdateAction(ctx context.Context, arg UpdateActionParams) (Action, error) {
 	row := q.db.QueryRowContext(ctx, updateAction,
+		arg.ID,
 		arg.Name,
 		arg.IDActions,
 		arg.Isin,
@@ -318,7 +319,6 @@ func (q *Queries) UpdateAction(ctx context.Context, arg UpdateActionParams) (Act
 		arg.Peak30d,
 		arg.Low30d,
 		arg.CreatedAt,
-		arg.ID,
 	)
 	var i Action
 	err := row.Scan(
