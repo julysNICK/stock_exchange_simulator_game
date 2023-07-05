@@ -47,7 +47,7 @@ CREATE TABLE "portfolio" (
 );
 
 CREATE TABLE "portfolioActions" (
-  "id" int PRIMARY KEY,
+  "id" bigserial PRIMARY KEY,
   "portfolio_id" bigint NOT NULL,
   "action_id" bigint NOT NULL,
   "player_id" bigint NOT NULL,

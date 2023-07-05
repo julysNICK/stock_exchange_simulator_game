@@ -22,7 +22,7 @@ func RandomIsinAction() string {
 }
 
 func RandomIDAction() int32 {	
-	convID, err := strconv.ParseInt(RandomINT32String(1, 100), 10, 64)
+	convID, err := strconv.ParseInt(RandomINT32String(1, 10), 10, 64)
 	if err != nil {
 		panic(err)
 	}
@@ -30,7 +30,7 @@ func RandomIDAction() int32 {
 }
 
 func RandomWknAction() string {
-	return RandomINT32String(1, 100) + RandomString(10)
+	return RandomINT32String(1, 10) + RandomString(10)
 }
 
 func RandomCurrentValueAction() string {
@@ -47,11 +47,11 @@ func RandomCurrentValueAction() string {
 }
 
 func RandomBidAction() string {
-	return RandomINT32String(1, 100)
+	return RandomINT32String(1, 10)
 }
 
 func RandomAskAction() string {
-	return RandomINT32String(1, 100)
+	return RandomINT32String(1, 10)
 }
 
 func RandomSpreadAction(bid, ask int64) string {
@@ -93,27 +93,27 @@ func RandomChangeAbsoluteAction(currentValue string, lastValue string) string {
 }
 
 func RandomPeak24hAction() string {
-	return RandomINT32String(1, 100)
+	return RandomINT32String(1, 10)
 }
 
 func RandomPeak7dAction() string {
-	return RandomINT32String(1, 100)
+	return RandomINT32String(1, 10)
 }
 
 func RandomPeak30dAction() string {
-	return RandomINT32String(1, 100)
+	return RandomINT32String(1, 10)
 }
 
 func RandomLow24hAction() string {
-	return RandomINT32String(1, 100)
+	return RandomINT32String(1, 10)
 }
 
 func RandomLow7dAction() string {
-	return RandomINT32String(1, 100)
+	return RandomINT32String(1, 10)
 }
 
 func RandomLow30dAction() string {
-	return RandomINT32String(1, 100)
+	return RandomINT32String(1, 10)
 }
 
 

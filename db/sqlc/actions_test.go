@@ -46,10 +46,10 @@ func createRandomAction(t *testing.T) Action {
 		ChangePercentage: util.RandomChangePercentageAction(
 			util.RandomINT32String(
 				1,
-				100,
+				10,
 			),
 			util.RandomINT32String(
-				1,100,
+				1,10,
 			),
 		) + ".00",
 		ChangeAbsolute: util.RandomChangeAbsoluteAction(
@@ -58,7 +58,7 @@ func createRandomAction(t *testing.T) Action {
 				100,
 			),
 			util.RandomINT32String(
-				1,100,
+				1,10,
 			),
 		) + ".00",
 		Peak24h: util.RandomPeak24hAction() + ".00",

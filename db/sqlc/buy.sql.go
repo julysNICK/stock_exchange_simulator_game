@@ -20,6 +20,46 @@ func (q *Queries) CountBuy(ctx context.Context) (int64, error) {
 	return count, err
 }
 
+const createBuy = `-- name: CreateBuy :one
+INSERT INTO buy (
+  action_id_buy,
+  profile_id,
+  number_stocks,
+  "limit"
+) VALUES (
+  $1,
+  $2,
+  $3,
+  $4
+) RETURNING id, action_id_buy, profile_id, number_stocks, "limit", created_at
+`
+
+type CreateBuyParams struct {
+	ActionIDBuy  int64  `json:"actionIDBuy"`
+	ProfileID    int64  `json:"profileID"`
+	NumberStocks int32  `json:"numberStocks"`
+	Limit        string `json:"limit"`
+}
+
+func (q *Queries) CreateBuy(ctx context.Context, arg CreateBuyParams) (Buy, error) {
+	row := q.db.QueryRowContext(ctx, createBuy,
+		arg.ActionIDBuy,
+		arg.ProfileID,
+		arg.NumberStocks,
+		arg.Limit,
+	)
+	var i Buy
+	err := row.Scan(
+		&i.ID,
+		&i.ActionIDBuy,
+		&i.ProfileID,
+		&i.NumberStocks,
+		&i.Limit,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const deleteBuy = `-- name: DeleteBuy :one
 DELETE FROM buy WHERE id = $1 RETURNING id, action_id_buy, profile_id, number_stocks, "limit", created_at
 `

@@ -1,3 +1,4 @@
+-- name: CreateBuy :one
 INSERT INTO buy (
   action_id_buy,
   profile_id,
