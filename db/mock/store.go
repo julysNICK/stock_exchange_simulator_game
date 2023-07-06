@@ -36,6 +36,21 @@ func (m *MockStoreDB) EXPECT() *MockStoreDBMockRecorder {
 	return m.recorder
 }
 
+// BuyTx mocks base method.
+func (m *MockStoreDB) BuyTx(arg0 context.Context, arg1 db.BuyTxParams) (db.BuyTxResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BuyTx", arg0, arg1)
+	ret0, _ := ret[0].(db.BuyTxResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// BuyTx indicates an expected call of BuyTx.
+func (mr *MockStoreDBMockRecorder) BuyTx(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuyTx", reflect.TypeOf((*MockStoreDB)(nil).BuyTx), arg0, arg1)
+}
+
 // CountActions mocks base method.
 func (m *MockStoreDB) CountActions(arg0 context.Context) (int64, error) {
 	m.ctrl.T.Helper()
@@ -572,6 +587,21 @@ func (m *MockStoreDB) ListPortfolioActionsByPortfolio_id(arg0 context.Context, a
 func (mr *MockStoreDBMockRecorder) ListPortfolioActionsByPortfolio_id(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListPortfolioActionsByPortfolio_id", reflect.TypeOf((*MockStoreDB)(nil).ListPortfolioActionsByPortfolio_id), arg0, arg1)
+}
+
+// PlayerTx mocks base method.
+func (m *MockStoreDB) PlayerTx(arg0 context.Context, arg1 db.PlayerTxParams) (db.PlayerTxResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PlayerTx", arg0, arg1)
+	ret0, _ := ret[0].(db.PlayerTxResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PlayerTx indicates an expected call of PlayerTx.
+func (mr *MockStoreDBMockRecorder) PlayerTx(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PlayerTx", reflect.TypeOf((*MockStoreDB)(nil).PlayerTx), arg0, arg1)
 }
 
 // RankPlayers mocks base method.

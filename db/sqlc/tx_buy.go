@@ -1,6 +1,9 @@
 package db
 
-import "context"
+import (
+	"context"
+	"strconv"
+)
 
 type BuyTxParams struct {
 	ActionIdBuy int64 `json:"action_id_buy"`
@@ -13,6 +16,8 @@ type BuyTxResult struct {
 	Action Action `json:"action"`
 	Player Player `json:"profile"`
 	Buy Buy `json:"number"`
+	PortfolioAction PortfolioAction `json:"portfolio_action"`
+	Portfolio Portfolio `json:"portfolio"`
 }
 
 func (store *SQLStore) BuyTx(ctx context.Context, arg BuyTxParams) (BuyTxResult, error){
@@ -34,12 +39,48 @@ func (store *SQLStore) BuyTx(ctx context.Context, arg BuyTxParams) (BuyTxResult,
 			return err
 		}
 
+		convPlayerCash, err := strconv.ParseInt(result.Player.Cash, 10, 64)
+
+		if err != nil {
+			return err
+		}
+
+		convActionCurrentValue, err := strconv.ParseInt(result.Action.CurrentValue, 10, 64)
+
+		if err != nil {
+			return err
+		}
+
+
+		if convPlayerCash < convActionCurrentValue  {
+			return err
+		}
+
+
+
 
 		result.Buy, err = q.CreateBuy(ctx, CreateBuyParams{
 			ActionIDBuy: arg.ActionIdBuy,
 			ProfileID: arg.ProfileId,
 			NumberStocks: arg.NumberStock,
 			Limit: arg.Limit,
+		})
+
+		if err != nil {
+			return err
+		}
+
+		result.Portfolio, err = q.GetPortfolioByPlayerId(ctx, arg.ProfileId)
+
+		if err != nil {
+			return err
+		}
+
+		result.PortfolioAction, err = q.CreatePortfolioAction(ctx, CreatePortfolioActionParams{
+			PortfolioID: result.Portfolio.ID,
+			ActionID: result.Action.ID,
+			Quantity: arg.NumberStock,
+			PurchasePrice: result.Action.CurrentValue,
 		})
 
 		if err != nil {

@@ -8,6 +8,8 @@ import (
 
 type StoreDB interface {
 	Querier
+	BuyTx(ctx context.Context, arg BuyTxParams) (BuyTxResult, error)
+	PlayerTx(ctx context.Context, arg PlayerTxParams) (PlayerTxResult, error)
 }
 
 type SQLStore struct {
