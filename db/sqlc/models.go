@@ -58,7 +58,7 @@ type Portfolio struct {
 }
 
 type PortfolioAction struct {
-	ID            int32     `json:"id"`
+	ID            int64     `json:"id"`
 	PortfolioID   int64     `json:"portfolioID"`
 	ActionID      int64     `json:"actionID"`
 	PlayerID      int64     `json:"playerID"`

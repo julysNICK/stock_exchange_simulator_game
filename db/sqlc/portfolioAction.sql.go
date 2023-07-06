@@ -9,18 +9,18 @@ import (
 	"context"
 )
 
-const countPortfolioActions = `-- name: countPortfolioActions :one
+const countPortfolioActions = `-- name: CountPortfolioActions :one
 SELECT count(*) FROM "portfolioActions"
 `
 
-func (q *Queries) countPortfolioActions(ctx context.Context) (int64, error) {
+func (q *Queries) CountPortfolioActions(ctx context.Context) (int64, error) {
 	row := q.db.QueryRowContext(ctx, countPortfolioActions)
 	var count int64
 	err := row.Scan(&count)
 	return count, err
 }
 
-const createPortfolioAction = `-- name: createPortfolioAction :one
+const createPortfolioAction = `-- name: CreatePortfolioAction :one
 INSERT INTO "portfolioActions" (
   portfolio_id,
   action_id,
@@ -36,7 +36,7 @@ INSERT INTO "portfolioActions" (
 ) RETURNING id, portfolio_id, action_id, player_id, quantity, purchase_price, created_at
 `
 
-type createPortfolioActionParams struct {
+type CreatePortfolioActionParams struct {
 	PortfolioID   int64  `json:"portfolioID"`
 	ActionID      int64  `json:"actionID"`
 	PlayerID      int64  `json:"playerID"`
@@ -44,7 +44,7 @@ type createPortfolioActionParams struct {
 	PurchasePrice string `json:"purchasePrice"`
 }
 
-func (q *Queries) createPortfolioAction(ctx context.Context, arg createPortfolioActionParams) (PortfolioAction, error) {
+func (q *Queries) CreatePortfolioAction(ctx context.Context, arg CreatePortfolioActionParams) (PortfolioAction, error) {
 	row := q.db.QueryRowContext(ctx, createPortfolioAction,
 		arg.PortfolioID,
 		arg.ActionID,
@@ -65,11 +65,11 @@ func (q *Queries) createPortfolioAction(ctx context.Context, arg createPortfolio
 	return i, err
 }
 
-const deletePortfolioAction = `-- name: deletePortfolioAction :one
+const deletePortfolioAction = `-- name: DeletePortfolioAction :one
 DELETE FROM "portfolioActions" WHERE id = $1 RETURNING id, portfolio_id, action_id, player_id, quantity, purchase_price, created_at
 `
 
-func (q *Queries) deletePortfolioAction(ctx context.Context, id int32) (PortfolioAction, error) {
+func (q *Queries) DeletePortfolioAction(ctx context.Context, id int64) (PortfolioAction, error) {
 	row := q.db.QueryRowContext(ctx, deletePortfolioAction, id)
 	var i PortfolioAction
 	err := row.Scan(
@@ -84,11 +84,11 @@ func (q *Queries) deletePortfolioAction(ctx context.Context, id int32) (Portfoli
 	return i, err
 }
 
-const getPortfolioActionByAction_id = `-- name: getPortfolioActionByAction_id :many
+const getPortfolioActionByAction_id = `-- name: GetPortfolioActionByAction_id :many
 SELECT id, portfolio_id, action_id, player_id, quantity, purchase_price, created_at FROM "portfolioActions" WHERE action_id = $1
 `
 
-func (q *Queries) getPortfolioActionByAction_id(ctx context.Context, actionID int64) ([]PortfolioAction, error) {
+func (q *Queries) GetPortfolioActionByAction_id(ctx context.Context, actionID int64) ([]PortfolioAction, error) {
 	rows, err := q.db.QueryContext(ctx, getPortfolioActionByAction_id, actionID)
 	if err != nil {
 		return nil, err
@@ -119,11 +119,11 @@ func (q *Queries) getPortfolioActionByAction_id(ctx context.Context, actionID in
 	return items, nil
 }
 
-const getPortfolioActionById = `-- name: getPortfolioActionById :one
+const getPortfolioActionById = `-- name: GetPortfolioActionById :one
 SELECT id, portfolio_id, action_id, player_id, quantity, purchase_price, created_at FROM "portfolioActions" WHERE id = $1
 `
 
-func (q *Queries) getPortfolioActionById(ctx context.Context, id int32) (PortfolioAction, error) {
+func (q *Queries) GetPortfolioActionById(ctx context.Context, id int64) (PortfolioAction, error) {
 	row := q.db.QueryRowContext(ctx, getPortfolioActionById, id)
 	var i PortfolioAction
 	err := row.Scan(
@@ -138,11 +138,11 @@ func (q *Queries) getPortfolioActionById(ctx context.Context, id int32) (Portfol
 	return i, err
 }
 
-const getPortfolioActionByPlayer_id = `-- name: getPortfolioActionByPlayer_id :many
+const getPortfolioActionByPlayer_id = `-- name: GetPortfolioActionByPlayer_id :many
 SELECT id, portfolio_id, action_id, player_id, quantity, purchase_price, created_at FROM "portfolioActions" WHERE player_id = $1
 `
 
-func (q *Queries) getPortfolioActionByPlayer_id(ctx context.Context, playerID int64) ([]PortfolioAction, error) {
+func (q *Queries) GetPortfolioActionByPlayer_id(ctx context.Context, playerID int64) ([]PortfolioAction, error) {
 	rows, err := q.db.QueryContext(ctx, getPortfolioActionByPlayer_id, playerID)
 	if err != nil {
 		return nil, err
@@ -173,11 +173,11 @@ func (q *Queries) getPortfolioActionByPlayer_id(ctx context.Context, playerID in
 	return items, nil
 }
 
-const getPortfolioActionByPortfolio_id = `-- name: getPortfolioActionByPortfolio_id :many
+const getPortfolioActionByPortfolio_id = `-- name: GetPortfolioActionByPortfolio_id :many
 SELECT id, portfolio_id, action_id, player_id, quantity, purchase_price, created_at FROM "portfolioActions" WHERE portfolio_id = $1
 `
 
-func (q *Queries) getPortfolioActionByPortfolio_id(ctx context.Context, portfolioID int64) ([]PortfolioAction, error) {
+func (q *Queries) GetPortfolioActionByPortfolio_id(ctx context.Context, portfolioID int64) ([]PortfolioAction, error) {
 	rows, err := q.db.QueryContext(ctx, getPortfolioActionByPortfolio_id, portfolioID)
 	if err != nil {
 		return nil, err
@@ -208,16 +208,16 @@ func (q *Queries) getPortfolioActionByPortfolio_id(ctx context.Context, portfoli
 	return items, nil
 }
 
-const listPortfolioActions = `-- name: listPortfolioActions :many
+const listPortfolioActions = `-- name: ListPortfolioActions :many
 SELECT id, portfolio_id, action_id, player_id, quantity, purchase_price, created_at FROM "portfolioActions" LIMIT $1 OFFSET $2
 `
 
-type listPortfolioActionsParams struct {
+type ListPortfolioActionsParams struct {
 	Limit  int32 `json:"limit"`
 	Offset int32 `json:"offset"`
 }
 
-func (q *Queries) listPortfolioActions(ctx context.Context, arg listPortfolioActionsParams) ([]PortfolioAction, error) {
+func (q *Queries) ListPortfolioActions(ctx context.Context, arg ListPortfolioActionsParams) ([]PortfolioAction, error) {
 	rows, err := q.db.QueryContext(ctx, listPortfolioActions, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
@@ -248,17 +248,17 @@ func (q *Queries) listPortfolioActions(ctx context.Context, arg listPortfolioAct
 	return items, nil
 }
 
-const listPortfolioActionsByPortfolio_id = `-- name: listPortfolioActionsByPortfolio_id :many
+const listPortfolioActionsByPortfolio_id = `-- name: ListPortfolioActionsByPortfolio_id :many
 SELECT id, portfolio_id, action_id, player_id, quantity, purchase_price, created_at FROM "portfolioActions" WHERE portfolio_id = $1 LIMIT $2 OFFSET $3
 `
 
-type listPortfolioActionsByPortfolio_idParams struct {
+type ListPortfolioActionsByPortfolio_idParams struct {
 	PortfolioID int64 `json:"portfolioID"`
 	Limit       int32 `json:"limit"`
 	Offset      int32 `json:"offset"`
 }
 
-func (q *Queries) listPortfolioActionsByPortfolio_id(ctx context.Context, arg listPortfolioActionsByPortfolio_idParams) ([]PortfolioAction, error) {
+func (q *Queries) ListPortfolioActionsByPortfolio_id(ctx context.Context, arg ListPortfolioActionsByPortfolio_idParams) ([]PortfolioAction, error) {
 	rows, err := q.db.QueryContext(ctx, listPortfolioActionsByPortfolio_id, arg.PortfolioID, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
@@ -289,7 +289,7 @@ func (q *Queries) listPortfolioActionsByPortfolio_id(ctx context.Context, arg li
 	return items, nil
 }
 
-const updatePortfolioAction = `-- name: updatePortfolioAction :one
+const updatePortfolioAction = `-- name: UpdatePortfolioAction :one
 UPDATE "portfolioActions" SET
   portfolio_id = COALESCE($1, portfolio_id),
   action_id = COALESCE($2, action_id),
@@ -300,16 +300,16 @@ WHERE id = $6
 RETURNING id, portfolio_id, action_id, player_id, quantity, purchase_price, created_at
 `
 
-type updatePortfolioActionParams struct {
+type UpdatePortfolioActionParams struct {
 	PortfolioID   int64  `json:"portfolioID"`
 	ActionID      int64  `json:"actionID"`
 	PlayerID      int64  `json:"playerID"`
 	Quantity      int32  `json:"quantity"`
 	PurchasePrice string `json:"purchasePrice"`
-	ID            int32  `json:"id"`
+	ID            int64  `json:"id"`
 }
 
-func (q *Queries) updatePortfolioAction(ctx context.Context, arg updatePortfolioActionParams) (PortfolioAction, error) {
+func (q *Queries) UpdatePortfolioAction(ctx context.Context, arg UpdatePortfolioActionParams) (PortfolioAction, error) {
 	row := q.db.QueryRowContext(ctx, updatePortfolioAction,
 		arg.PortfolioID,
 		arg.ActionID,

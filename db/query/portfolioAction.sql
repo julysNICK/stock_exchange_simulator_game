@@ -1,4 +1,4 @@
--- name: createPortfolioAction :one
+-- name: CreatePortfolioAction :one
 INSERT INTO "portfolioActions" (
   portfolio_id,
   action_id,
@@ -13,19 +13,19 @@ INSERT INTO "portfolioActions" (
   $5
 ) RETURNING *;
 
--- name: getPortfolioActionById :one
+-- name: GetPortfolioActionById :one
 SELECT * FROM "portfolioActions" WHERE id = $1;
 
--- name: getPortfolioActionByPortfolio_id :many
+-- name: GetPortfolioActionByPortfolio_id :many
 SELECT * FROM "portfolioActions" WHERE portfolio_id = $1;
 
--- name: getPortfolioActionByAction_id :many
+-- name: GetPortfolioActionByAction_id :many
 SELECT * FROM "portfolioActions" WHERE action_id = $1;
 
--- name: getPortfolioActionByPlayer_id :many
+-- name: GetPortfolioActionByPlayer_id :many
 SELECT * FROM "portfolioActions" WHERE player_id = $1;
 
--- name: updatePortfolioAction :one
+-- name: UpdatePortfolioAction :one
 UPDATE "portfolioActions" SET
   portfolio_id = COALESCE($1, portfolio_id),
   action_id = COALESCE($2, action_id),
@@ -35,14 +35,14 @@ UPDATE "portfolioActions" SET
 WHERE id = $6
 RETURNING *;
 
--- name: deletePortfolioAction :one
+-- name: DeletePortfolioAction :one
 DELETE FROM "portfolioActions" WHERE id = $1 RETURNING *;
 
--- name: listPortfolioActions :many
+-- name: ListPortfolioActions :many
 SELECT * FROM "portfolioActions" LIMIT $1 OFFSET $2;
 
--- name: countPortfolioActions :one
+-- name: CountPortfolioActions :one
 SELECT count(*) FROM "portfolioActions";
 
--- name: listPortfolioActionsByPortfolio_id :many
+-- name: ListPortfolioActionsByPortfolio_id :many
 SELECT * FROM "portfolioActions" WHERE portfolio_id = $1 LIMIT $2 OFFSET $3;

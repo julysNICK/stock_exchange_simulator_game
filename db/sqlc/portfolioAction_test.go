@@ -13,7 +13,7 @@ func createRandomPortfolioAction(
 ) PortfolioAction{
 	randomPortfolio := createRandomPortfolio(t)
 	randomAction := createRandomAction(t)
-	arg := createPortfolioActionParams{
+	arg := CreatePortfolioActionParams{
 		PortfolioID: randomPortfolio.ID,
 		ActionID: randomAction.ID,
 		PlayerID: randomPortfolio.PlayerID,
@@ -21,7 +21,7 @@ func createRandomPortfolioAction(
 		Quantity: 1,
 	}
 
-	portfolioAction, err := testQueries.createPortfolioAction(context.Background(), arg)
+	portfolioAction, err := testQueries.CreatePortfolioAction(context.Background(), arg)
 
 	require.NoError(t, err)
 
@@ -54,7 +54,7 @@ func TestCountPortfolioActions(t *testing.T){
 		createRandomPortfolioAction(t)
 	}
 
-	count, err := testQueries.countPortfolioActions(context.Background())
+	count, err := testQueries.CountPortfolioActions(context.Background())
 
 	require.NoError(t, err)
 
@@ -65,7 +65,7 @@ func TestCountPortfolioActions(t *testing.T){
 
 func TestDeletePortfolioAction(t *testing.T) {
 	portfolioAction1 := createRandomPortfolioAction(t)
-	portfolioAction2, err := testQueries.deletePortfolioAction(context.Background(), portfolioAction1.ID)
+	portfolioAction2, err := testQueries.DeletePortfolioAction(context.Background(), portfolioAction1.ID)
 	require.NoError(t, err)
 	require.NotEmpty(t, portfolioAction2)
 
@@ -83,7 +83,7 @@ func TestDeletePortfolioAction(t *testing.T) {
 
 	require.WithinDuration(t, portfolioAction1.CreatedAt, portfolioAction2.CreatedAt, time.Second)
 
-	portfolioAction3, err := testQueries.getPortfolioActionById(context.Background(), portfolioAction1.ID)
+	portfolioAction3, err := testQueries.GetPortfolioActionById(context.Background(), portfolioAction1.ID)
 	require.Error(t, err)
 	require.Empty(t, portfolioAction3)
 }
@@ -91,7 +91,7 @@ func TestDeletePortfolioAction(t *testing.T) {
 
 func TestGetPortfolioActionByAction_id(t *testing.T){
 	portfolioAction1 := createRandomPortfolioAction(t)
-	portfolioAction2, err := testQueries.getPortfolioActionByAction_id(context.Background(), portfolioAction1.ActionID)
+	portfolioAction2, err := testQueries.GetPortfolioActionByAction_id(context.Background(), portfolioAction1.ActionID)
 	require.NoError(t, err)
 	require.NotEmpty(t, portfolioAction2)
 
@@ -100,7 +100,7 @@ func TestGetPortfolioActionByAction_id(t *testing.T){
 
 func TestGetPortfolioActionById(t *testing.T){
 	portfolioAction1 := createRandomPortfolioAction(t)
-	portfolioAction2, err := testQueries.getPortfolioActionById(context.Background(), portfolioAction1.ID)
+	portfolioAction2, err := testQueries.GetPortfolioActionById(context.Background(), portfolioAction1.ID)
 	require.NoError(t, err)
 	require.NotEmpty(t, portfolioAction2)
 
@@ -109,7 +109,7 @@ func TestGetPortfolioActionById(t *testing.T){
 
 func TestGetPortfolioActionByPlayer_id(t *testing.T){
 	portfolioAction1 := createRandomPortfolioAction(t)
-	portfolioAction2, err := testQueries.getPortfolioActionByPlayer_id(context.Background(), portfolioAction1.PlayerID)
+	portfolioAction2, err := testQueries.GetPortfolioActionByPlayer_id(context.Background(), portfolioAction1.PlayerID)
 	require.NoError(t, err)
 	require.NotEmpty(t, portfolioAction2)
 
@@ -118,7 +118,7 @@ func TestGetPortfolioActionByPlayer_id(t *testing.T){
 
 func TestGetPortfolioActionByPortfolio_id(t *testing.T){
 	portfolioAction1 := createRandomPortfolioAction(t)
-	portfolioAction2, err := testQueries.getPortfolioActionByPortfolio_id(context.Background(), portfolioAction1.PortfolioID)
+	portfolioAction2, err := testQueries.GetPortfolioActionByPortfolio_id(context.Background(), portfolioAction1.PortfolioID)
 	require.NoError(t, err)
 	require.NotEmpty(t, portfolioAction2)
 
@@ -132,7 +132,7 @@ func TestListPortfolioActions(t *testing.T){
 
 	
 
-	portfolioActions, err := testQueries.listPortfolioActions(context.Background(), listPortfolioActionsParams{
+	portfolioActions, err := testQueries.ListPortfolioActions(context.Background(), ListPortfolioActionsParams{
 		Limit:  5,
 		Offset: 5,
 	})
@@ -153,7 +153,7 @@ func TestUpdatePortfolioAction(t *testing.T){
 
 	for i := 0; i < 10; i++ {
 		go func() {
-			portfolioAction2, err := testQueries.updatePortfolioAction(context.Background(), updatePortfolioActionParams{
+			portfolioAction2, err := testQueries.UpdatePortfolioAction(context.Background(), UpdatePortfolioActionParams{
 				ID: portfolioAction1.ID,
 				PortfolioID: portfolioAction1.PortfolioID,
 				ActionID: portfolioAction1.ActionID,
@@ -171,7 +171,7 @@ func TestUpdatePortfolioAction(t *testing.T){
 		require.NoError(t, err)
 	}
 
-	portfolioAction3, err := testQueries.getPortfolioActionById(context.Background(), portfolioAction1.ID)
+	portfolioAction3, err := testQueries.GetPortfolioActionById(context.Background(), portfolioAction1.ID)
 
 	require.NoError(t, err)
 
