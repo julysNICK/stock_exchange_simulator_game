@@ -30,6 +30,11 @@ initdocker:
 
 stopdocker:
 	sudo systemctl stop docker && sudo docker stop postgres_stock_exchange
+
+
+startdocker:
+	sudo systemctl start docker && sudo docker start postgres_stock_exchange
+
 	
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/julysNICK/stock_exchange_simulator_game/db/sqlc StoreDB
