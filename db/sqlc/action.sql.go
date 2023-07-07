@@ -199,6 +199,53 @@ func (q *Queries) GetActionByName(ctx context.Context, name string) (Action, err
 	return i, err
 }
 
+const getAllActions = `-- name: GetAllActions :many
+SELECT id, name, id_actions, isin, wkn, current_value, bid, ask, spread, time_of_last_refresh, change_percentage, change_absolute, peak24h, low24h, peak7d, low7d, peak30d, low30d, created_at FROM actions
+`
+
+func (q *Queries) GetAllActions(ctx context.Context) ([]Action, error) {
+	rows, err := q.db.QueryContext(ctx, getAllActions)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Action{}
+	for rows.Next() {
+		var i Action
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.IDActions,
+			&i.Isin,
+			&i.Wkn,
+			&i.CurrentValue,
+			&i.Bid,
+			&i.Ask,
+			&i.Spread,
+			&i.TimeOfLastRefresh,
+			&i.ChangePercentage,
+			&i.ChangeAbsolute,
+			&i.Peak24h,
+			&i.Low24h,
+			&i.Peak7d,
+			&i.Low7d,
+			&i.Peak30d,
+			&i.Low30d,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listActions = `-- name: ListActions :many
 SELECT id, name, id_actions, isin, wkn, current_value, bid, ask, spread, time_of_last_refresh, change_percentage, change_absolute, peak24h, low24h, peak7d, low7d, peak30d, low30d, created_at FROM actions LIMIT $1 OFFSET $2
 `

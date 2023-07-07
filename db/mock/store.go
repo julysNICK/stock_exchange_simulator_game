@@ -304,6 +304,21 @@ func (mr *MockStoreDBMockRecorder) GetActionByName(arg0, arg1 interface{}) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetActionByName", reflect.TypeOf((*MockStoreDB)(nil).GetActionByName), arg0, arg1)
 }
 
+// GetAllActions mocks base method.
+func (m *MockStoreDB) GetAllActions(arg0 context.Context) ([]db.Action, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllActions", arg0)
+	ret0, _ := ret[0].([]db.Action)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllActions indicates an expected call of GetAllActions.
+func (mr *MockStoreDBMockRecorder) GetAllActions(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllActions", reflect.TypeOf((*MockStoreDB)(nil).GetAllActions), arg0)
+}
+
 // GetBuyByActionId mocks base method.
 func (m *MockStoreDB) GetBuyByActionId(arg0 context.Context, arg1 int64) ([]db.Buy, error) {
 	m.ctrl.T.Helper()

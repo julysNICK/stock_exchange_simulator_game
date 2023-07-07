@@ -27,6 +27,7 @@ type Querier interface {
 	DeletePortfolioAction(ctx context.Context, id int64) (PortfolioAction, error)
 	GetActionById(ctx context.Context, id int64) (Action, error)
 	GetActionByName(ctx context.Context, name string) (Action, error)
+	GetAllActions(ctx context.Context) ([]Action, error)
 	GetBuyByActionId(ctx context.Context, actionIDBuy int64) ([]Buy, error)
 	GetBuyById(ctx context.Context, id int64) (Buy, error)
 	GetBuyByProfile_id(ctx context.Context, profileID int64) ([]Buy, error)

@@ -38,6 +38,10 @@ INSERT INTO actions (
 )
 RETURNING *;
 
+
+-- name: GetAllActions :many
+SELECT * FROM actions;
+
 -- name: GetActionByName :one
 SELECT * FROM actions WHERE name = $1;
 

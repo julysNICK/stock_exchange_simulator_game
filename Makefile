@@ -40,4 +40,5 @@ mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/julysNICK/stock_exchange_simulator_game/db/sqlc StoreDB
 
 
+
 .PHONY: sqlc server network postgres createdb dropdb initdocker stopdocker migrateup migratedown
