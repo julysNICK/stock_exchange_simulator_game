@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"net/http"
 	"sync"
 	"time"
@@ -81,8 +80,6 @@ func (s *Server) HandleGetActions(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("room: ", room)
-
 	go readMessage(room, conn)
 
 }
@@ -112,7 +109,7 @@ func (s *Server) UpdateActionsCurrentValues(
 ) {
 
 	for {
-		time.Sleep(5 * time.Second)
+		time.Sleep(100 * time.Minute)
 
 		actions, err := s.store.GetAllActions(c)
 
