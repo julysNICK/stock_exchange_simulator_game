@@ -33,6 +33,7 @@ func (server *Server) setupRouter() {
 	})
 
 	router.GET("/game/actions/:room", server.HandleGetActions)
+	router.POST("/game/actions/buy", server.HandleBuyAction)
 
 	server.router = router
 }

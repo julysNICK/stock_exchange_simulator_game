@@ -170,3 +170,66 @@ func broadcastMessage(room string, msg ActionInfo) {
 
 	roomMux.Unlock()
 }
+
+type BuyActionRequest struct {
+	StockID    int64  `json:"stock_id"`
+	ProfileID  int64  `json:"profile_id"`
+	Amount     int32  `json:"amount"`
+	LimitPrice string `json:"limit_price"`
+}
+
+type BuyActionResponse struct {
+	Message string `json:"message"`
+}
+
+func (s *Server) HandleBuyAction(c *gin.Context) {
+	var req BuyActionRequest
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+
+		return
+	}
+
+	if req.LimitPrice == "0" {
+		_, err := s.store.BuyTx(c, db.BuyTxParams{
+			ActionIdBuy: req.StockID,
+			ProfileId:   req.ProfileID,
+			NumberStock: req.Amount,
+			Limit:       req.LimitPrice,
+		})
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+
+			return
+		}
+
+		c.JSON(http.StatusOK, BuyActionResponse{
+			Message: "success buy",
+		})
+	}
+
+	// _, err := s.store.ScheduleBuyTx(c, db.ScheduleBuyTxParams{
+	// 	ActionIdBuy: req.StockID,
+	// 	ProfileId:   req.ProfileID,
+	// 	NumberStock: req.Amount,
+	// 	Limit:       req.LimitPrice,
+	// })
+
+	// if err != nil {
+	// 	c.JSON(http.StatusInternalServerError, gin.H{
+	// 		"error": err.Error(),
+	// 	})
+
+	// 	return
+	// }
+
+	// c.JSON(http.StatusOK, BuyActionResponse{
+	// 	Message: "success schedule buy",
+	// })
+}
