@@ -126,3 +126,42 @@ func (s *Server) UpdatePlayer(ctx *gin.Context) {
 	})
 
 }
+
+type GetPlayersRankingResponse struct {
+	Message string        `json:"message"`
+	Players []db.Player `json:"players"`
+}
+
+type GetPlayersRankingFormParams struct {
+	PageId int32 `form:"page_id" binding:"required"`
+	Limit  int32 `form:"limit" binding:"required"`
+}
+
+func (s *Server) GetPlayersRanking(ctx *gin.Context) {
+	var form GetPlayersRankingFormParams
+
+	if err := ctx.ShouldBindQuery(&form); err != nil {
+		ctx.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	players, err := s.store.RankPlayers(ctx, db.RankPlayersParams{
+		Limit:  form.Limit,
+		Offset: form.PageId * form.Limit,
+	})
+
+	if err != nil {
+		ctx.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, GetPlayersRankingResponse{
+		Message: "Players ranking",
+		Players: players,
+	})
+}
+	

@@ -24,6 +24,9 @@ createdb:
 dropdb:
 	sudo docker exec -it postgres_stock_exchange dropdb stock_exchange
 
+new_migration:
+	migrate create -ext sql -dir db/migration -seq $(name)
+
 
 initdocker:
 	sudo systemctl start docker && sudo docker start postgres_stock_exchange
@@ -41,4 +44,4 @@ mock:
 
 
 
-.PHONY: sqlc server network postgres createdb dropdb initdocker stopdocker migrateup migratedown
+.PHONY: sqlc server network postgres createdb dropdb initdocker stopdocker migrateup migratedown new_migration mock

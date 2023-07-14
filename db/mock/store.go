@@ -201,6 +201,21 @@ func (mr *MockStoreDBMockRecorder) CreatePortfolioAction(arg0, arg1 interface{})
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePortfolioAction", reflect.TypeOf((*MockStoreDB)(nil).CreatePortfolioAction), arg0, arg1)
 }
 
+// CreatePurchaseSchedule mocks base method.
+func (m *MockStoreDB) CreatePurchaseSchedule(arg0 context.Context, arg1 db.CreatePurchaseScheduleParams) (db.PurchaseSchedule, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreatePurchaseSchedule", arg0, arg1)
+	ret0, _ := ret[0].(db.PurchaseSchedule)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreatePurchaseSchedule indicates an expected call of CreatePurchaseSchedule.
+func (mr *MockStoreDBMockRecorder) CreatePurchaseSchedule(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePurchaseSchedule", reflect.TypeOf((*MockStoreDB)(nil).CreatePurchaseSchedule), arg0, arg1)
+}
+
 // DeleteAction mocks base method.
 func (m *MockStoreDB) DeleteAction(arg0 context.Context, arg1 int64) error {
 	m.ctrl.T.Helper()
@@ -319,6 +334,21 @@ func (mr *MockStoreDBMockRecorder) GetAllActions(arg0 interface{}) *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllActions", reflect.TypeOf((*MockStoreDB)(nil).GetAllActions), arg0)
 }
 
+// GetAllPurchaseSchedule mocks base method.
+func (m *MockStoreDB) GetAllPurchaseSchedule(arg0 context.Context) ([]db.PurchaseSchedule, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllPurchaseSchedule", arg0)
+	ret0, _ := ret[0].([]db.PurchaseSchedule)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllPurchaseSchedule indicates an expected call of GetAllPurchaseSchedule.
+func (mr *MockStoreDBMockRecorder) GetAllPurchaseSchedule(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllPurchaseSchedule", reflect.TypeOf((*MockStoreDB)(nil).GetAllPurchaseSchedule), arg0)
+}
+
 // GetBuyByActionId mocks base method.
 func (m *MockStoreDB) GetBuyByActionId(arg0 context.Context, arg1 int64) ([]db.Buy, error) {
 	m.ctrl.T.Helper()
@@ -332,6 +362,21 @@ func (m *MockStoreDB) GetBuyByActionId(arg0 context.Context, arg1 int64) ([]db.B
 func (mr *MockStoreDBMockRecorder) GetBuyByActionId(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBuyByActionId", reflect.TypeOf((*MockStoreDB)(nil).GetBuyByActionId), arg0, arg1)
+}
+
+// GetBuyByBuyIdAndProfileId mocks base method.
+func (m *MockStoreDB) GetBuyByBuyIdAndProfileId(arg0 context.Context, arg1 db.GetBuyByBuyIdAndProfileIdParams) (db.Buy, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBuyByBuyIdAndProfileId", arg0, arg1)
+	ret0, _ := ret[0].(db.Buy)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBuyByBuyIdAndProfileId indicates an expected call of GetBuyByBuyIdAndProfileId.
+func (mr *MockStoreDBMockRecorder) GetBuyByBuyIdAndProfileId(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBuyByBuyIdAndProfileId", reflect.TypeOf((*MockStoreDB)(nil).GetBuyByBuyIdAndProfileId), arg0, arg1)
 }
 
 // GetBuyById mocks base method.
@@ -497,6 +542,21 @@ func (m *MockStoreDB) GetPortfolioByPlayerId(arg0 context.Context, arg1 int64) (
 func (mr *MockStoreDBMockRecorder) GetPortfolioByPlayerId(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPortfolioByPlayerId", reflect.TypeOf((*MockStoreDB)(nil).GetPortfolioByPlayerId), arg0, arg1)
+}
+
+// GetPurchaseScheduleById mocks base method.
+func (m *MockStoreDB) GetPurchaseScheduleById(arg0 context.Context, arg1 int64) (db.PurchaseSchedule, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPurchaseScheduleById", arg0, arg1)
+	ret0, _ := ret[0].(db.PurchaseSchedule)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPurchaseScheduleById indicates an expected call of GetPurchaseScheduleById.
+func (mr *MockStoreDBMockRecorder) GetPurchaseScheduleById(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPurchaseScheduleById", reflect.TypeOf((*MockStoreDB)(nil).GetPurchaseScheduleById), arg0, arg1)
 }
 
 // ListActions mocks base method.
@@ -707,4 +767,19 @@ func (m *MockStoreDB) UpdatePortfolioAction(arg0 context.Context, arg1 db.Update
 func (mr *MockStoreDBMockRecorder) UpdatePortfolioAction(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePortfolioAction", reflect.TypeOf((*MockStoreDB)(nil).UpdatePortfolioAction), arg0, arg1)
+}
+
+// UpdatePurchaseSchedule mocks base method.
+func (m *MockStoreDB) UpdatePurchaseSchedule(arg0 context.Context, arg1 db.UpdatePurchaseScheduleParams) (db.PurchaseSchedule, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdatePurchaseSchedule", arg0, arg1)
+	ret0, _ := ret[0].(db.PurchaseSchedule)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdatePurchaseSchedule indicates an expected call of UpdatePurchaseSchedule.
+func (mr *MockStoreDBMockRecorder) UpdatePurchaseSchedule(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePurchaseSchedule", reflect.TypeOf((*MockStoreDB)(nil).UpdatePurchaseSchedule), arg0, arg1)
 }

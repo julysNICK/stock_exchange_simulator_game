@@ -25,13 +25,15 @@ INSERT INTO buy (
   action_id_buy,
   profile_id,
   number_stocks,
-  "limit"
+  "limit",
+  "status"
 ) VALUES (
   $1,
   $2,
   $3,
-  $4
-) RETURNING id, action_id_buy, profile_id, number_stocks, "limit", created_at
+  $4,
+  $5
+) RETURNING id, action_id_buy, profile_id, number_stocks, "limit", status, created_at
 `
 
 type CreateBuyParams struct {
@@ -39,6 +41,7 @@ type CreateBuyParams struct {
 	ProfileID    int64  `json:"profileID"`
 	NumberStocks int32  `json:"numberStocks"`
 	Limit        string `json:"limit"`
+	Status       string `json:"status"`
 }
 
 func (q *Queries) CreateBuy(ctx context.Context, arg CreateBuyParams) (Buy, error) {
@@ -47,6 +50,7 @@ func (q *Queries) CreateBuy(ctx context.Context, arg CreateBuyParams) (Buy, erro
 		arg.ProfileID,
 		arg.NumberStocks,
 		arg.Limit,
+		arg.Status,
 	)
 	var i Buy
 	err := row.Scan(
@@ -55,13 +59,14 @@ func (q *Queries) CreateBuy(ctx context.Context, arg CreateBuyParams) (Buy, erro
 		&i.ProfileID,
 		&i.NumberStocks,
 		&i.Limit,
+		&i.Status,
 		&i.CreatedAt,
 	)
 	return i, err
 }
 
 const deleteBuy = `-- name: DeleteBuy :one
-DELETE FROM buy WHERE id = $1 RETURNING id, action_id_buy, profile_id, number_stocks, "limit", created_at
+DELETE FROM buy WHERE id = $1 RETURNING id, action_id_buy, profile_id, number_stocks, "limit", status, created_at
 `
 
 func (q *Queries) DeleteBuy(ctx context.Context, id int64) (Buy, error) {
@@ -73,13 +78,14 @@ func (q *Queries) DeleteBuy(ctx context.Context, id int64) (Buy, error) {
 		&i.ProfileID,
 		&i.NumberStocks,
 		&i.Limit,
+		&i.Status,
 		&i.CreatedAt,
 	)
 	return i, err
 }
 
 const getBuyByActionId = `-- name: GetBuyByActionId :many
-SELECT id, action_id_buy, profile_id, number_stocks, "limit", created_at FROM buy WHERE action_id_buy = $1
+SELECT id, action_id_buy, profile_id, number_stocks, "limit", status, created_at FROM buy WHERE action_id_buy = $1
 `
 
 func (q *Queries) GetBuyByActionId(ctx context.Context, actionIDBuy int64) ([]Buy, error) {
@@ -97,6 +103,7 @@ func (q *Queries) GetBuyByActionId(ctx context.Context, actionIDBuy int64) ([]Bu
 			&i.ProfileID,
 			&i.NumberStocks,
 			&i.Limit,
+			&i.Status,
 			&i.CreatedAt,
 		); err != nil {
 			return nil, err
@@ -112,8 +119,32 @@ func (q *Queries) GetBuyByActionId(ctx context.Context, actionIDBuy int64) ([]Bu
 	return items, nil
 }
 
+const getBuyByBuyIdAndProfileId = `-- name: GetBuyByBuyIdAndProfileId :one
+SELECT id, action_id_buy, profile_id, number_stocks, "limit", status, created_at FROM buy WHERE id = $1 AND profile_id = $2
+`
+
+type GetBuyByBuyIdAndProfileIdParams struct {
+	ID        int64 `json:"id"`
+	ProfileID int64 `json:"profileID"`
+}
+
+func (q *Queries) GetBuyByBuyIdAndProfileId(ctx context.Context, arg GetBuyByBuyIdAndProfileIdParams) (Buy, error) {
+	row := q.db.QueryRowContext(ctx, getBuyByBuyIdAndProfileId, arg.ID, arg.ProfileID)
+	var i Buy
+	err := row.Scan(
+		&i.ID,
+		&i.ActionIDBuy,
+		&i.ProfileID,
+		&i.NumberStocks,
+		&i.Limit,
+		&i.Status,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const getBuyById = `-- name: GetBuyById :one
-SELECT id, action_id_buy, profile_id, number_stocks, "limit", created_at FROM buy WHERE id = $1
+SELECT id, action_id_buy, profile_id, number_stocks, "limit", status, created_at FROM buy WHERE id = $1
 `
 
 func (q *Queries) GetBuyById(ctx context.Context, id int64) (Buy, error) {
@@ -125,13 +156,14 @@ func (q *Queries) GetBuyById(ctx context.Context, id int64) (Buy, error) {
 		&i.ProfileID,
 		&i.NumberStocks,
 		&i.Limit,
+		&i.Status,
 		&i.CreatedAt,
 	)
 	return i, err
 }
 
 const getBuyByProfile_id = `-- name: GetBuyByProfile_id :many
-SELECT id, action_id_buy, profile_id, number_stocks, "limit", created_at FROM buy WHERE profile_id = $1
+SELECT id, action_id_buy, profile_id, number_stocks, "limit", status, created_at FROM buy WHERE profile_id = $1
 `
 
 func (q *Queries) GetBuyByProfile_id(ctx context.Context, profileID int64) ([]Buy, error) {
@@ -149,6 +181,7 @@ func (q *Queries) GetBuyByProfile_id(ctx context.Context, profileID int64) ([]Bu
 			&i.ProfileID,
 			&i.NumberStocks,
 			&i.Limit,
+			&i.Status,
 			&i.CreatedAt,
 		); err != nil {
 			return nil, err
@@ -165,7 +198,7 @@ func (q *Queries) GetBuyByProfile_id(ctx context.Context, profileID int64) ([]Bu
 }
 
 const listBuy = `-- name: ListBuy :many
-SELECT id, action_id_buy, profile_id, number_stocks, "limit", created_at FROM buy LIMIT $1 OFFSET $2
+SELECT id, action_id_buy, profile_id, number_stocks, "limit", status, created_at FROM buy LIMIT $1 OFFSET $2
 `
 
 type ListBuyParams struct {
@@ -188,6 +221,7 @@ func (q *Queries) ListBuy(ctx context.Context, arg ListBuyParams) ([]Buy, error)
 			&i.ProfileID,
 			&i.NumberStocks,
 			&i.Limit,
+			&i.Status,
 			&i.CreatedAt,
 		); err != nil {
 			return nil, err
@@ -204,7 +238,7 @@ func (q *Queries) ListBuy(ctx context.Context, arg ListBuyParams) ([]Buy, error)
 }
 
 const listBuyByProfile_id = `-- name: ListBuyByProfile_id :many
-SELECT id, action_id_buy, profile_id, number_stocks, "limit", created_at FROM buy WHERE profile_id = $1 LIMIT $2 OFFSET $3
+SELECT id, action_id_buy, profile_id, number_stocks, "limit", status, created_at FROM buy WHERE profile_id = $1 LIMIT $2 OFFSET $3
 `
 
 type ListBuyByProfile_idParams struct {
@@ -228,6 +262,7 @@ func (q *Queries) ListBuyByProfile_id(ctx context.Context, arg ListBuyByProfile_
 			&i.ProfileID,
 			&i.NumberStocks,
 			&i.Limit,
+			&i.Status,
 			&i.CreatedAt,
 		); err != nil {
 			return nil, err
@@ -248,9 +283,10 @@ UPDATE buy SET
   action_id_buy = COALESCE($1, action_id_buy),
   profile_id = COALESCE($2, profile_id),
   number_stocks = COALESCE($3, number_stocks),
-  "limit" = COALESCE($4, "limit")
-WHERE id = $5
-RETURNING id, action_id_buy, profile_id, number_stocks, "limit", created_at
+  "limit" = COALESCE($4, "limit"),
+  "status" = COALESCE($5, "status")
+WHERE id = $6
+RETURNING id, action_id_buy, profile_id, number_stocks, "limit", status, created_at
 `
 
 type UpdateBuyParams struct {
@@ -258,6 +294,7 @@ type UpdateBuyParams struct {
 	ProfileID    int64  `json:"profileID"`
 	NumberStocks int32  `json:"numberStocks"`
 	Limit        string `json:"limit"`
+	Status       string `json:"status"`
 	ID           int64  `json:"id"`
 }
 
@@ -267,6 +304,7 @@ func (q *Queries) UpdateBuy(ctx context.Context, arg UpdateBuyParams) (Buy, erro
 		arg.ProfileID,
 		arg.NumberStocks,
 		arg.Limit,
+		arg.Status,
 		arg.ID,
 	)
 	var i Buy
@@ -276,6 +314,7 @@ func (q *Queries) UpdateBuy(ctx context.Context, arg UpdateBuyParams) (Buy, erro
 		&i.ProfileID,
 		&i.NumberStocks,
 		&i.Limit,
+		&i.Status,
 		&i.CreatedAt,
 	)
 	return i, err

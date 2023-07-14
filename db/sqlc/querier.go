@@ -20,6 +20,7 @@ type Querier interface {
 	CreatePlayer(ctx context.Context, arg CreatePlayerParams) (Player, error)
 	CreatePortfolio(ctx context.Context, playerID int64) (Portfolio, error)
 	CreatePortfolioAction(ctx context.Context, arg CreatePortfolioActionParams) (PortfolioAction, error)
+	CreatePurchaseSchedule(ctx context.Context, arg CreatePurchaseScheduleParams) (PurchaseSchedule, error)
 	DeleteAction(ctx context.Context, id int64) error
 	DeleteBuy(ctx context.Context, id int64) (Buy, error)
 	DeletePlayer(ctx context.Context, idPlayer int64) error
@@ -28,7 +29,9 @@ type Querier interface {
 	GetActionById(ctx context.Context, id int64) (Action, error)
 	GetActionByName(ctx context.Context, name string) (Action, error)
 	GetAllActions(ctx context.Context) ([]Action, error)
+	GetAllPurchaseSchedule(ctx context.Context) ([]PurchaseSchedule, error)
 	GetBuyByActionId(ctx context.Context, actionIDBuy int64) ([]Buy, error)
+	GetBuyByBuyIdAndProfileId(ctx context.Context, arg GetBuyByBuyIdAndProfileIdParams) (Buy, error)
 	GetBuyById(ctx context.Context, id int64) (Buy, error)
 	GetBuyByProfile_id(ctx context.Context, profileID int64) ([]Buy, error)
 	GetPlayerByEmail(ctx context.Context, email string) (Player, error)
@@ -40,6 +43,7 @@ type Querier interface {
 	GetPortfolioActionByPortfolio_id(ctx context.Context, portfolioID int64) ([]PortfolioAction, error)
 	GetPortfolioById(ctx context.Context, id int64) (Portfolio, error)
 	GetPortfolioByPlayerId(ctx context.Context, playerID int64) (Portfolio, error)
+	GetPurchaseScheduleById(ctx context.Context, id int64) (PurchaseSchedule, error)
 	ListActions(ctx context.Context, arg ListActionsParams) ([]Action, error)
 	ListBuy(ctx context.Context, arg ListBuyParams) ([]Buy, error)
 	ListBuyByProfile_id(ctx context.Context, arg ListBuyByProfile_idParams) ([]Buy, error)
@@ -53,6 +57,7 @@ type Querier interface {
 	UpdatePlayer(ctx context.Context, arg UpdatePlayerParams) (Player, error)
 	UpdatePortfolio(ctx context.Context, arg UpdatePortfolioParams) (Portfolio, error)
 	UpdatePortfolioAction(ctx context.Context, arg UpdatePortfolioActionParams) (PortfolioAction, error)
+	UpdatePurchaseSchedule(ctx context.Context, arg UpdatePurchaseScheduleParams) (PurchaseSchedule, error)
 }
 
 var _ Querier = (*Queries)(nil)

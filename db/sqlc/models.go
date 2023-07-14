@@ -37,6 +37,7 @@ type Buy struct {
 	ProfileID    int64     `json:"profileID"`
 	NumberStocks int32     `json:"numberStocks"`
 	Limit        string    `json:"limit"`
+	Status       string    `json:"status"`
 	CreatedAt    time.Time `json:"createdAt"`
 }
 
@@ -65,4 +66,12 @@ type PortfolioAction struct {
 	Quantity      int32     `json:"quantity"`
 	PurchasePrice string    `json:"purchasePrice"`
 	CreatedAt     time.Time `json:"createdAt"`
+}
+
+type PurchaseSchedule struct {
+	ID              int64     `json:"id"`
+	BuyId           int64     `json:"buyId"`
+	Stage           string    `json:"stage"`
+	CreatedOrderBuy time.Time `json:"createdOrderBuy"`
+	CreatedAt       time.Time `json:"createdAt"`
 }
