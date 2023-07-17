@@ -43,6 +43,7 @@ type Querier interface {
 	GetPortfolioActionByPortfolio_id(ctx context.Context, portfolioID int64) ([]PortfolioAction, error)
 	GetPortfolioById(ctx context.Context, id int64) (Portfolio, error)
 	GetPortfolioByPlayerId(ctx context.Context, playerID int64) (Portfolio, error)
+	GetPurchaseScheduleByBuyId(ctx context.Context, buyid int64) ([]PurchaseSchedule, error)
 	GetPurchaseScheduleById(ctx context.Context, id int64) (PurchaseSchedule, error)
 	ListActions(ctx context.Context, arg ListActionsParams) ([]Action, error)
 	ListBuy(ctx context.Context, arg ListBuyParams) ([]Buy, error)

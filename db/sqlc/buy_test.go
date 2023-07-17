@@ -7,16 +7,16 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func createRandomBuy(t *testing.T) Buy{
+func createRandomBuy(t *testing.T) Buy {
 
 	action := createRandomAction(t)
 	profile := createRandomPlayer(t)
 
 	arg := CreateBuyParams{
-		ActionIDBuy: action.ID,
-		ProfileID: profile.IDPlayer,
+		ActionIDBuy:  action.ID,
+		ProfileID:    profile.IDPlayer,
 		NumberStocks: 1,
-		Limit: "100.00",
+		LimitBuy:     "100.00",
 	}
 
 	buy, err := testQueries.CreateBuy(context.Background(), arg)
@@ -26,24 +26,21 @@ func createRandomBuy(t *testing.T) Buy{
 	require.Equal(t, arg.ActionIDBuy, buy.ActionIDBuy)
 	require.Equal(t, arg.ProfileID, buy.ProfileID)
 	require.Equal(t, arg.NumberStocks, buy.NumberStocks)
-	require.Equal(t, arg.Limit, buy.Limit)
-
-
+	require.Equal(t, arg.LimitBuy, buy.LimitBuy)
 
 	return buy
 
 }
 
-func createRandomBuyFix(t *testing.T) Buy{
+func createRandomBuyFix(t *testing.T) Buy {
 
 	action := createRandomAction(t)
 
-
 	arg := CreateBuyParams{
-		ActionIDBuy: action.ID,
-		ProfileID: 1,
+		ActionIDBuy:  action.ID,
+		ProfileID:    1,
 		NumberStocks: 1,
-		Limit: "100.00",
+		LimitBuy:     "100.00",
 	}
 
 	buy, err := testQueries.CreateBuy(context.Background(), arg)
@@ -53,9 +50,7 @@ func createRandomBuyFix(t *testing.T) Buy{
 	require.Equal(t, arg.ActionIDBuy, buy.ActionIDBuy)
 	require.Equal(t, arg.ProfileID, buy.ProfileID)
 	require.Equal(t, arg.NumberStocks, buy.NumberStocks)
-	require.Equal(t, arg.Limit, buy.Limit)
-
-
+	require.Equal(t, arg.LimitBuy, buy.LimitBuy)
 
 	return buy
 
@@ -75,9 +70,9 @@ func TestCountBuy(t *testing.T) {
 	require.NotEmpty(t, count)
 }
 
-func TestDeleteBuy(t *testing.T){
+func TestDeleteBuy(t *testing.T) {
 	buy1 := createRandomBuy(t)
-	buyDeleted,	err := testQueries.DeleteBuy(context.Background(), buy1.ID)
+	buyDeleted, err := testQueries.DeleteBuy(context.Background(), buy1.ID)
 	require.NoError(t, err)
 	require.NotEmpty(t, buyDeleted)
 	require.Equal(t, buy1.ID, buyDeleted.ID)
@@ -86,7 +81,7 @@ func TestDeleteBuy(t *testing.T){
 	require.Equal(t, buy1.NumberStocks, buyDeleted.NumberStocks)
 }
 
-func TestGetBuyById(t *testing.T){
+func TestGetBuyById(t *testing.T) {
 	buy1 := createRandomBuy(t)
 	buyGet, err := testQueries.GetBuyById(context.Background(), buy1.ID)
 	require.NoError(t, err)
@@ -97,8 +92,7 @@ func TestGetBuyById(t *testing.T){
 	require.Equal(t, buy1.NumberStocks, buyGet.NumberStocks)
 }
 
-
-func TestGetBuyByProfileId(t *testing.T){
+func TestGetBuyByProfileId(t *testing.T) {
 	buy1 := createRandomBuy(t)
 	buyGet, err := testQueries.GetBuyByProfile_id(context.Background(), buy1.ProfileID)
 	require.NoError(t, err)
@@ -106,7 +100,7 @@ func TestGetBuyByProfileId(t *testing.T){
 
 }
 
-func TestListBuy(t *testing.T){
+func TestListBuy(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		createRandomBuy(t)
 	}
@@ -137,4 +131,3 @@ func TestListBuy(t *testing.T){
 // 	require.NoError(t, err)
 // 	require.Len(t, buys, int(arg.Limit))
 // }
-

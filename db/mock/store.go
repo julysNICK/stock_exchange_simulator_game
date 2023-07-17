@@ -51,6 +51,21 @@ func (mr *MockStoreDBMockRecorder) BuyTx(arg0, arg1 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuyTx", reflect.TypeOf((*MockStoreDB)(nil).BuyTx), arg0, arg1)
 }
 
+// BuyUpdateTx mocks base method.
+func (m *MockStoreDB) BuyUpdateTx(arg0 context.Context, arg1 db.BuyUpdateTxParams) (db.BuyUpdateTxResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BuyUpdateTx", arg0, arg1)
+	ret0, _ := ret[0].(db.BuyUpdateTxResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// BuyUpdateTx indicates an expected call of BuyUpdateTx.
+func (mr *MockStoreDBMockRecorder) BuyUpdateTx(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuyUpdateTx", reflect.TypeOf((*MockStoreDB)(nil).BuyUpdateTx), arg0, arg1)
+}
+
 // CountActions mocks base method.
 func (m *MockStoreDB) CountActions(arg0 context.Context) (int64, error) {
 	m.ctrl.T.Helper()
@@ -542,6 +557,21 @@ func (m *MockStoreDB) GetPortfolioByPlayerId(arg0 context.Context, arg1 int64) (
 func (mr *MockStoreDBMockRecorder) GetPortfolioByPlayerId(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPortfolioByPlayerId", reflect.TypeOf((*MockStoreDB)(nil).GetPortfolioByPlayerId), arg0, arg1)
+}
+
+// GetPurchaseScheduleByBuyId mocks base method.
+func (m *MockStoreDB) GetPurchaseScheduleByBuyId(arg0 context.Context, arg1 int64) ([]db.PurchaseSchedule, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPurchaseScheduleByBuyId", arg0, arg1)
+	ret0, _ := ret[0].([]db.PurchaseSchedule)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPurchaseScheduleByBuyId indicates an expected call of GetPurchaseScheduleByBuyId.
+func (mr *MockStoreDBMockRecorder) GetPurchaseScheduleByBuyId(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPurchaseScheduleByBuyId", reflect.TypeOf((*MockStoreDB)(nil).GetPurchaseScheduleByBuyId), arg0, arg1)
 }
 
 // GetPurchaseScheduleById mocks base method.

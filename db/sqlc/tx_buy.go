@@ -2,6 +2,8 @@ package db
 
 import (
 	"context"
+	"database/sql"
+	"fmt"
 	"strconv"
 )
 
@@ -66,7 +68,7 @@ func (store *SQLStore) BuyTx(ctx context.Context, arg BuyTxParams) (BuyTxResult,
 				ActionIDBuy:  arg.ActionIdBuy,
 				ProfileID:    arg.ProfileId,
 				NumberStocks: arg.NumberStock,
-				Limit:        arg.Limit,
+				LimitBuy:     arg.Limit,
 			})
 
 			if err != nil {
@@ -86,7 +88,7 @@ func (store *SQLStore) BuyTx(ctx context.Context, arg BuyTxParams) (BuyTxResult,
 				ActionIDBuy:  arg.ActionIdBuy,
 				ProfileID:    arg.ProfileId,
 				NumberStocks: arg.NumberStock,
-				Limit:        arg.Limit,
+				LimitBuy:     arg.Limit,
 				Status:       "completed",
 			})
 			if err != nil {
@@ -119,8 +121,9 @@ func (store *SQLStore) BuyTx(ctx context.Context, arg BuyTxParams) (BuyTxResult,
 }
 
 type BuyUpdateTxParams struct {
-	Status    string `json:"status,omitempty"`
-	IdProfile int64  `json:"id_profile"`
+	Status             string `json:"status,omitempty"`
+	IdProfile          int64  `json:"id_profile"`
+	IdPurchaseSchedule int64  `json:"id_purchase_schedule"`
 }
 
 type BuyUpdateTxResult struct {
@@ -131,6 +134,7 @@ type BuyUpdateTxResult struct {
 }
 
 func (store *SQLStore) BuyUpdateTx(ctx context.Context, arg BuyUpdateTxParams) (BuyUpdateTxResult, error) {
+	fmt.Println("BuyUpdateTx")
 	var result BuyUpdateTxResult
 
 	err := store.execTx(ctx, func(q *Queries) error {
@@ -143,24 +147,31 @@ func (store *SQLStore) BuyUpdateTx(ctx context.Context, arg BuyUpdateTxParams) (
 		})
 
 		if err != nil {
+			fmt.Println("err GetBuyByBuyIdAndProfileId", err)
 			return err
 		}
-
+		fmt.Println("result.Buy.Id", result.Buy.ID)
 		result.PurchaseSchedule, err = q.UpdatePurchaseSchedule(ctx, UpdatePurchaseScheduleParams{
+			ID:    arg.IdPurchaseSchedule,
 			BuyId: result.Buy.ID,
 			Stage: arg.Status,
 		})
 
 		if err != nil {
+			fmt.Println("err UpdatePurchaseSchedule", err)
 			return err
 		}
 
 		result.Buy, err = q.UpdateBuy(ctx, UpdateBuyParams{
-			ID:     result.Buy.ID,
-			Status: arg.Status,
+			ID: result.Buy.ID,
+			Status: sql.NullString{
+				String: arg.Status,
+				Valid:  true,
+			},
 		})
 
 		if err != nil {
+			fmt.Println("err UpdateBuy", err)
 			return err
 		}
 
@@ -170,14 +181,19 @@ func (store *SQLStore) BuyUpdateTx(ctx context.Context, arg BuyUpdateTxParams) (
 			return err
 		}
 
+		fmt.Println("result.Portfolio", result.Portfolio)
+		fmt.Println("result.Buy.ActionIDBuy", result.Buy.ActionIDBuy)
+
 		result.PortfolioAction, err = q.CreatePortfolioAction(ctx, CreatePortfolioActionParams{
 			PortfolioID:   result.Portfolio.ID,
 			ActionID:      result.Buy.ActionIDBuy,
 			Quantity:      result.Buy.NumberStocks,
 			PurchasePrice: "2.00",
+			PlayerID:      arg.IdProfile,
 		})
 
 		if err != nil {
+			fmt.Println("err CreatePortfolioAction", err)
 			return err
 		}
 

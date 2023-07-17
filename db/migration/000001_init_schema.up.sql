@@ -36,7 +36,7 @@ CREATE TABLE "buy" (
   "action_id_buy" bigint NOT NULL,
   "profile_id" bigint NOT NULL,
   "number_stocks" int NOT NULL,
-  "limit" numeric(10, 2) NOT NULL,
+  "limit_buy" numeric(10, 2) NOT NULL,
   "status" varchar(255) NOT NULL DEFAULT 'pending',
   "created_at" timestamp NOT NULL DEFAULT (now())
 );

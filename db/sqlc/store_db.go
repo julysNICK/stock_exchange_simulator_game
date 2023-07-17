@@ -9,6 +9,7 @@ import (
 type StoreDB interface {
 	Querier
 	BuyTx(ctx context.Context, arg BuyTxParams) (BuyTxResult, error)
+	BuyUpdateTx(ctx context.Context, arg BuyUpdateTxParams) (BuyUpdateTxResult, error)
 	PlayerTx(ctx context.Context, arg PlayerTxParams) (PlayerTxResult, error)
 }
 

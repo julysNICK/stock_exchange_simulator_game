@@ -3,7 +3,7 @@ INSERT INTO buy (
   action_id_buy,
   profile_id,
   number_stocks,
-  "limit",
+  "limit_buy",
   "status"
 ) VALUES (
   $1,
@@ -27,12 +27,12 @@ SELECT * FROM buy WHERE action_id_buy = $1;
 
 -- name: UpdateBuy :one
 UPDATE buy SET
-  action_id_buy = COALESCE($1, action_id_buy),
-  profile_id = COALESCE($2, profile_id),
-  number_stocks = COALESCE($3, number_stocks),
-  "limit" = COALESCE($4, "limit"),
-  "status" = COALESCE($5, "status")
-WHERE id = $6
+  action_id_buy = COALESCE(sqlc.narg(action_id_buy), action_id_buy),
+  profile_id = COALESCE(sqlc.narg(profile_id), profile_id),
+  number_stocks = COALESCE(sqlc.narg(number_stocks), number_stocks),
+  "status" = COALESCE(sqlc.narg(status), "status"),
+  limit_buy = COALESCE(sqlc.narg(limit_buy), limit_buy)
+WHERE id = $1
 RETURNING *;
 
 -- name: DeleteBuy :one

@@ -3,7 +3,9 @@ package api
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"net/http"
+	"strconv"
 	"sync"
 	"time"
 
@@ -158,6 +160,84 @@ func (s *Server) UpdateActionsCurrentValues(
 	}
 }
 
+func (s *Server) CronCheckPurchaseSchedule(
+	c context.Context,
+) {
+
+	fmt.Println("CronCheckPurchaseSchedule")
+
+	for {
+		fmt.Println("CronCheckPurchaseSchedule for")
+
+		time.Sleep(1 * time.Minute)
+
+		purchaseSchedules, err := s.store.GetAllPurchaseSchedule(c)
+
+		fmt.Println("purchaseSchedules", purchaseSchedules)
+
+		if err != nil {
+			fmt.Println("err", err)
+			return
+		}
+
+		for _, purchaseSchedule := range purchaseSchedules {
+
+			fmt.Println("purchaseSchedule", purchaseSchedule)
+
+			buy, err := s.store.GetBuyById(c, purchaseSchedule.BuyId)
+			fmt.Println("buy", buy)
+			if err != nil {
+				fmt.Println("err", err)
+				return
+			}
+
+			if buy.Status == "pending" {
+				fmt.Println("buy.Status == pending")
+				action, err := s.store.GetActionById(c, buy.ActionIDBuy)
+
+				if err != nil {
+					return
+				}
+
+				convPrice, err := strconv.ParseFloat(action.CurrentValue, 64)
+
+				if err != nil {
+					return
+				}
+
+				convLimit, err := strconv.ParseFloat(buy.LimitBuy, 64)
+
+				if err != nil {
+					return
+				}
+
+				fmt.Println("convPrice", convPrice)
+				fmt.Println("convLimit", convLimit)
+
+				if convPrice <= convLimit {
+					fmt.Println("convPrice <= convLimit")
+					_, err := s.store.BuyUpdateTx(c, db.BuyUpdateTxParams{
+						IdPurchaseSchedule: purchaseSchedule.ID,
+						IdProfile:          buy.ProfileID,
+						Status:             "success",
+					})
+
+					if err != nil {
+						fmt.Println("err", err)
+						return
+					}
+				}
+
+				return
+
+			}
+			return
+		}
+
+	}
+
+}
+
 func broadcastMessage(room string, msg ActionInfo) {
 	roomMux.Lock()
 	for conn := range rooms[room] {
@@ -193,26 +273,24 @@ func (s *Server) HandleBuyAction(c *gin.Context) {
 		return
 	}
 
-	if req.LimitPrice == "0" {
-		_, err := s.store.BuyTx(c, db.BuyTxParams{
-			ActionIdBuy: req.StockID,
-			ProfileId:   req.ProfileID,
-			NumberStock: req.Amount,
-			Limit:       req.LimitPrice,
+	_, err := s.store.BuyTx(c, db.BuyTxParams{
+		ActionIdBuy: req.StockID,
+		ProfileId:   req.ProfileID,
+		NumberStock: req.Amount,
+		Limit:       req.LimitPrice,
+	})
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
 		})
 
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": err.Error(),
-			})
-
-			return
-		}
-
-		c.JSON(http.StatusOK, BuyActionResponse{
-			Message: "success buy",
-		})
+		return
 	}
+
+	c.JSON(http.StatusOK, BuyActionResponse{
+		Message: "success buy",
+	})
 
 	// _, err := s.store.ScheduleBuyTx(c, db.ScheduleBuyTxParams{
 	// 	ActionIdBuy: req.StockID,

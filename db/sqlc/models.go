@@ -36,7 +36,7 @@ type Buy struct {
 	ActionIDBuy  int64     `json:"actionIDBuy"`
 	ProfileID    int64     `json:"profileID"`
 	NumberStocks int32     `json:"numberStocks"`
-	Limit        string    `json:"limit"`
+	LimitBuy     string    `json:"limitBuy"`
 	Status       string    `json:"status"`
 	CreatedAt    time.Time `json:"createdAt"`
 }

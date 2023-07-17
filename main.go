@@ -36,7 +36,9 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	go server.UpdateActionsCurrentValues(ctx)
+	// go server.UpdateActionsCurrentValues(ctx)
+
+	go server.CronCheckPurchaseSchedule(ctx)
 
 	err = server.Start(config.HTTP_SERVER_ADDRESS)
 

@@ -17,6 +17,10 @@ SELECT * FROM "purchaseSchedule";
 SELECT * FROM "purchaseSchedule" WHERE id = $1;
 
 
+-- name: GetPurchaseScheduleByBuyId :many
+SELECT * FROM "purchaseSchedule" WHERE "buyId" = $1;
+
+
 -- name: UpdatePurchaseSchedule :one
 UPDATE "purchaseSchedule" SET
   "buyId" = COALESCE($1, "buyId"),

@@ -75,6 +75,39 @@ func (q *Queries) GetAllPurchaseSchedule(ctx context.Context) ([]PurchaseSchedul
 	return items, nil
 }
 
+const getPurchaseScheduleByBuyId = `-- name: GetPurchaseScheduleByBuyId :many
+SELECT id, "buyId", stage, created_order_buy, created_at FROM "purchaseSchedule" WHERE "buyId" = $1
+`
+
+func (q *Queries) GetPurchaseScheduleByBuyId(ctx context.Context, buyid int64) ([]PurchaseSchedule, error) {
+	rows, err := q.db.QueryContext(ctx, getPurchaseScheduleByBuyId, buyid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []PurchaseSchedule{}
+	for rows.Next() {
+		var i PurchaseSchedule
+		if err := rows.Scan(
+			&i.ID,
+			&i.BuyId,
+			&i.Stage,
+			&i.CreatedOrderBuy,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getPurchaseScheduleById = `-- name: GetPurchaseScheduleById :one
 SELECT id, "buyId", stage, created_order_buy, created_at FROM "purchaseSchedule" WHERE id = $1
 `
